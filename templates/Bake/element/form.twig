@@ -1,0 +1,512 @@
+{#
+/**
+ * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ *
+ * Licensed under The MIT License
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          http://cakephp.org CakePHP(tm) Project
+ * @since         2.0.0
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ */
+#}
+<?php // Baked at {{ "now"|date("Y.m.d. H:i:s", "Europe/Budapest") }}  ?>
+<?php use Cake\Core\Configure; ?>
+<?php use Cake\I18n\FrozenTime; ?>
+<?php use Cake\I18n\I18n; ?>
+<?php 
+	$prefix = strtolower( $this->request->getParam('prefix') );	
+	$config = Configure::read('Theme.' . $prefix);	
+	$config['form_show_counts'] = false;
+?>
+<?php $locale = I18n::getLocale(); ?>
+<?php //$formats = Configure::read('Formats'); ?>
+<?php //$format = $formats[$locale]; ?>
+{% set fields = Bake.filterFields(fields, schema, modelObject) %}
+		<div class="{{ action }} col-sm-10">
+			<div class="card card-lightblue">
+				<div class="card-header">
+					<h3 class="card-title"><?= __('{{ action|humanize }}') ?>: <?= $title ?><i id="card-loader-icon" class="icon-spin4 animate-spin" style="font-size: 24px; opacity: 1; color: white; font-weight: bold;"></i></h3>
+				</div><!-- /.card-header -->
+
+				<!-- form start -->
+				<?= $this->Form->create(${{ singularVar }}, ['id' => 'main-form', 'class'=>'form-horizontal']) ?>
+			  
+					<!-- card-body -->
+					<div class="card-body" style="opacity: 0;">
+{{- "\n" }}
+{%- set done = [] %}
+{%- set selectField = false %}
+{%- set booleanField = false %}
+{%- set posField = false %}
+{%- set datetimeField = false %}
+{%- set textField = false %}
+{% for field in fields %}
+{%- if field not in primaryKey %}
+    {%- if keyFields[field] is defined %}
+        {%- set fieldData = Bake.columnData(field, schema) %}
+		{#- ********* type, length, null, default, collate, comment, precision ********** #}
+		{%- set label = field %}
+		{%- if fieldData.comment not in '' %}
+			{%- set label = fieldData.comment %}
+		{%- endif %}
+		{%- set selectField = true %}
+        {%- if fieldData.null %}
+						<!-- 1. {{ fieldData.type }} -->
+						<div class="form-group row">
+							<label for="{{ field }}" class="col-sm-2 col-form-label"><?= __('{{ label|humanize }}') ?>:</label>
+							<div class="col-sm-4">
+								<?php echo $this->Form->control('{{ field }}', ['options' => ${{ keyFields[field] }}, 'class' => 'selectpicker form-control {{ fieldData.type }}', 'title' => 'Kérem válasszon...', 'data-live-search' => 'true', 'data-actions-box' => 'true', 'label' => false, 'empty' => true]); ?>
+							</div>										
+						</div>
+						{{- "\n" }}
+						{{- "\n" }}
+        {%- else %}
+						<!-- 2. {{ fieldData.type }} -->
+						<div class="form-group row">
+							<label for="{{ field }}" class="col-sm-2 col-form-label"><?= __('{{ label|humanize }}') ?>:</label>
+							<div class="col-sm-4">
+								<?php echo $this->Form->control('{{ field }}', ['options' => ${{ keyFields[field] }}, 'class' => 'selectpicker form-control {{ fieldData.type }}', 'title' => 'Kérem válasszon...', 'data-live-search' => 'true', 'data-actions-box' => 'true', 'label' => false]); ?>
+							</div>										
+						</div>
+						{{- "\n" }}
+						{{- "\n" }}
+        {%- endif %}
+    {%- elseif field not in ['created', 'modified', 'updated'] %}
+        {%- set fieldData = Bake.columnData(field, schema) %}
+		{%- set label = field %}
+		{%- if fieldData.comment not in '' %}
+			{%- set label = fieldData.comment %}
+		{%- endif %}
+		{%- set required = ', "required" => true' %}
+		{%- set allowEmpty = ", 'empty' => true" %}
+		{%- if fieldData.null %}
+			{%- set allowEmpty = '' %}
+			{%- set required = ', "required" => false' %}
+		{%- endif %}
+        {%- if fieldData.type in ['date', 'datetime', 'time'] %}
+						{%- set datetimeField = true %}
+						{%- if fieldData.type in ['date', 'datetime'] %}
+							{%- set icon = 'calendar' %}
+						{%- else %}
+							{%- set icon = 'clock' %}
+						{%- endif %}
+						<?php // https://tempusdominus.github.io/bootstrap-4/Usage/ ?>
+						<!-- 3. {{ fieldData.type }} -->
+						<div class="form-group row">
+							<label for="{{ field|replace({'_': '-'}) }}" class="col-sm-2 col-form-label"><?= __('{{ label|humanize }}') ?>:</label>
+							<div class="col-md-10 col-sm-10 col-xs-10">
+								<div class="input-group {{ fieldData.type }}" id="{{ field|replace({'_': '-'}) }}" data-target-input="nearest">
+									<?= $this->Form->control('{{ field }}', ['type'=>'text', 'label'=>false, 'placeholder' => __('{{ label|humanize }}'), 'class'=>'form-control datetimepicker-input', 'data-target'=>'#{{ field|replace({'_': '-'}) }}', 'autocomplete'=>'off', 'data-validity-message'=>__('This field cannot be left empty'){{ allowEmpty|raw }}{{ required|raw }}]); ?>
+									<div class="input-group-append" data-target="#{{ field|replace({'_': '-'}) }}" data-toggle="datetimepicker">
+										<div class="input-group-text"><i class="icon-{{ icon }}"></i></div>
+									</div>
+								</div>
+							</div>
+						</div>
+						{{- "\n" }}
+						{{- "\n" }}					
+        {%- else %}
+		{%- if fieldData.type in ['tinyinteger', 'smallinteger', 'integer', 'biginteger', 'decimal', 'float'] and '_count' not in field %}
+				{%- set content = '{{content}}' %}
+				{%- set error = '{{error}}' %}
+				{%- set value = '' %}
+				{%- set spinner = '' %}
+				{%- if field == 'pos' and 'add' in action %}
+					{%- set value = ", 'value' => 500, 'step' => '10'" %}
+				{%- endif %}
+				{%- if field == 'pos' and 'edit' in action %}
+					{%- set value = ", 'step' => '10'" %}
+				{%- endif %}
+				{%- if field == 'pos' %}
+					{%- set spinner = " spinner" %}
+					{%- set posField = true %}
+				{%- endif %}
+				{%- set unsigned = "" %}
+				{%- if fieldData.unsigned %}
+					{%- set unsigned = "" %}
+				{%- endif %}
+						<!-- 4.a. {{ fieldData.type }} -->
+						<div class="form-group row">
+							<label for="{{ field|replace({'_': '-'}) }}" class="col-sm-2 col-form-label"><?= __('{{ label|humanize }}') ?>:</label>
+							<div class="input-group col-xs-12 col-sm-10 col-md-8 col-lg-4 col-xl-3">
+								<?= $this->Form->control('{{ field }}', ['type' => 'number', 'class' => 'form-control number{{ spinner }}', 'label' => false, 'templates'=>[ 'inputContainer' => '{{ content|raw }}', 'inputContainerError' => '{{ content|raw }}{{ error|raw }}']{{ allowEmpty|raw }}{{ value|raw }}{{ required|raw }}]) ?>
+							</div>
+						</div>					
+						{{- "\n" }}
+						{{- "\n" }}
+        {%- endif %}
+		{%- if '_count' in field %}
+<?php if(isset($config['form_show_counts']) && $config['form_show_counts']){ ?>
+						<!-- 4.b. {{ fieldData.type }} -->
+						<div class="form-group row">
+							<label for="{{ field|replace({'_': '-'}) }}" class="col-sm-2 col-form-label"><?= __('{{ label|humanize }}') ?>:</label>
+							<div class="input-group col-xs-12 col-sm-10 col-md-8 col-lg-4 col-xl-4">
+								<div class="count"><?= ${{ singularVar }}->{{ field }} ?></div>
+							</div>
+						</div>
+<?php } ?>
+						{{- "\n" }}
+						{{- "\n" }}
+        {%- endif %}
+		{%- if fieldData.type in ['boolean'] %}
+				{%- set booleanField = true %}
+				{%- set checked = '' %}
+				{%- set content = '{{content}}' %}
+				{%- set error = '{{error}}' %}
+				{%- if field in ['visible'] and 'add' in action %}
+					{%- set checked = ", 'checked' => true" %}
+				{%- endif %}
+						<!-- 5. {{ fieldData.type }} -->
+						<div class="form-group row">
+							<div class="offset-sm-2 col-sm-10">
+								<?= $this->Form->control('{{ field }}', ['id'=>'{{ field|replace({'_': '-'}) }}', 'div'=>false, 'type'=>'checkbox', 'class'=>'flat', 'label'=>false{{ allowEmpty|raw }}{{ checked|raw }}, 'templates'=>[ 'inputContainer' => '{{content}}', 'inputContainerError' => '{{content}}{{error}}' ]{{ required|raw }} ]); ?>
+								<label class="checkbox" for="{{ field|replace({'_': '-'}) }}"><?= __('{{ label|humanize }}') ?></label>
+							</div>
+						</div>
+						{{- "\n" }}
+						{{- "\n" }}
+        {%- endif %}
+		{%- if fieldData.type in ['string', 'char'] %}
+				{%- set textType = 'text' %}
+				{%- if field in ['email'] %}
+					{%- set textType = 'email' %}
+				{%- endif %}
+				{%- if field in ['password'] %}
+					{%- set textType = 'password' %}
+				{%- endif %}
+				{%- if field in ['tel', 'phone', 'telephone'] %}
+					{%- set textType = 'tel' %}
+				{%- endif %}
+				{%- set autofocus = '' %}
+				{%- set autofocus = ", 'autofocus' => false" %}
+				{%- if field in ['name'] and 'add' in action %}
+					{%- set autofocus = ", 'autofocus' => true" %}
+				{%- endif %}
+						<!-- 6. {{ fieldData.type }} -->
+						<div class="form-group row">
+							<label for="{{ field|replace({'_': '-'}) }}" class="col-sm-2 col-form-label"><?= __('{{ label|humanize }}') ?>:</label>
+							<div class="col-sm-9">
+								<?= $this->Form->control('{{ field }}', ['placeholder' => __(''), 'type'=>'{{ textType }}', 'class'=>'form-control', 'label' => false{{ allowEmpty|raw }}{{ autofocus|raw }}{{ required|raw }}]) ?>
+							</div>
+						</div>
+						{{- "\n" }}
+						{{- "\n" }}
+        {%- endif %}
+		{%- if fieldData.type in ['text'] %}
+			{%- set textField = true %}
+						<!-- 7. {{ fieldData.type }} -->
+						<div class="form-group row">
+							<label for="{{ field|replace({'_': '-'}) }}" class="col-sm-2 col-form-label"><?= __('{{ label|humanize }}') ?>:</label>
+							<div class="col-sm-10">
+								<?= $this->Form->textarea('{{ field }}', ['type'=>'textarea', 'class'=>'summernote', 'label' => false, 'placeholder'=>__('Place some text here'){{ allowEmpty|raw }}, 'style'=>'width: 100%; height: 249px;'{{ required|raw }} ]) ?>
+							</div>
+						</div>
+						{{- "\n" }}
+						{{- "\n" }}
+        {%- endif %}
+        {%- endif %}
+    {%- endif %}
+{%- endif %}
+{%- endfor %}
+
+{%- if associations.BelongsToMany is defined %}
+{%- for assocName, assocData in associations.BelongsToMany %}
+{%- set selectField = true %}
+					<!-- 8. {{ fieldData.type }} -->
+					<div class="form-group row">
+						<label for="{{ field|replace({'_': '-'}) }}" class="col-sm-2 col-form-label"><?= __('{{ assocData.property|humanize }}') ?>:</label>
+						<div class="col-sm-9">
+							<?php echo $this->Form->control('{{ assocData.property }}._ids', ['options' => ${{ assocData.variable }}, 'class' => 'selectpicker form-control {{ fieldData.type }}', 'title' => 'Kérem válasszon...', 'data-live-search' => 'true', 'data-actions-box' => 'true', 'label' => false, 'empty' => true, 'multiple'=>true{{ allowEmpty|raw }}{{ value|raw }}{{ required|raw }}]) ?>
+							{{- "\n" }}
+						</div>
+					</div>
+		{{- "\n" }}
+		{{- "\n" }}
+{%- endfor %}
+{% endif %}
+
+					</div><!-- /.card-body -->
+				
+					<div class="card-footer">
+						<button type="submit" class="offset-sm-2 btn btn-info" data-bs-tooltip="tooltip" data-bs-placement="top" title="<?= __('Save and back to list') ?>" ><span class="btn-label"><i class="fa fa-save"></i></span> <?= __('Save') ?></button>
+						<?= $this->Html->link(__('Cancel'), ['action' => 'index'], ['class'=>'btn btn-default', 'role'=>'button', 'escape'=>false, 'data-bs-tooltip'=>'tooltip', 'data-bs-placement'=>'top', 'title' => __('Back to list without save') ] ) ?>
+					</div><!-- /.card-footer -->
+
+				<?= $this->Form->end() ?>
+
+            </div>
+        </div>
+
+<?php
+	$this->Html->css(
+		[
+			"JeffAdmin./plugins/fontello/css/animation",
+{%- if booleanField %}
+{{- "\n" }}			"JeffAdmin./plugins/icheck-bootstrap/icheck-bootstrap.min",
+{{- "\n" }}			"JeffAdmin./plugins/icheck-1.x/skins/flat/blue",
+{%- endif %}
+{%- if selectField %}
+{{- "\n" }}			"JeffAdmin./plugins/bootstrap-select-1.13.14/dist/css/bootstrap-select.min",
+{%- endif %}
+{%- if textField %}
+{{- "\n" }}			"JeffAdmin./plugins/summernote/summernote-bs4.min",
+{%- endif %}
+{#
+/**
+			// -------- később --------
+			//"JeffAdmin./plugins/bootstrap4-datetime-picker-rails-master/vendor/assets/stylesheets/tempusdominus-bootstrap-4.min",	
+			//"JeffAdmin./plugins/dropzone/min/dropzone.min.css",
+			//"JeffAdmin./vendors/Formstone-master/dist/css/upload",
+*/ #}
+{{- "\n" }}		],
+		['block' => true]);
+
+
+	$this->Html->script(
+		[
+{%- if booleanField %}
+{{- "\n" }}			"JeffAdmin./plugins/icheck-1.x/icheck.min",
+{%- endif %}
+{%- if selectField %}
+{{- "\n" }}			"JeffAdmin./plugins/bootstrap-select-1.13.14/dist/js/bootstrap-select.min",
+{%- endif %}
+{%- if datetimeField %}
+{{- "\n" }}			"JeffAdmin./plugins/moment/moment.min",
+{{- "\n" }}			"JeffAdmin./plugins/moment/locale/hu",
+{{- "\n" }}			"JeffAdmin./plugins/bootstrap4-datetime-picker-rails-master/vendor/assets/javascripts/tempusdominus-bootstrap-4.min",
+{%- endif %}
+{%- if posField %}
+{{- "\n" }}			"JeffAdmin./plugins/bootstrap-input-spinner-master/src/bootstrap-input-spinner",
+{%- endif %}
+{%- if textField %}
+{{- "\n" }}			"JeffAdmin./plugins/summernote/summernote-bs4.min",
+{{- "\n" }}			"JeffAdmin./plugins/summernote/lang/summernote-hu-HU.min",
+{%- endif %}
+{#
+/**
+			// ------- talán ---------
+			//"JeffAdmin./plugins/dropzone/min/dropzone.min.js",			// Ha van file feltöltés
+			//"JeffAdmin./plugins/bootstrap-switch/js/bootstrap-switch.min.js",
+			//"JeffAdmin./vendors/show-hide-content-expandable/jquery.expandable.js",
+			////"JeffAdmin./vendors/dropzone-5.7.0/dist/min/dropzone.min",
+			////"JeffAdmin./vendors/dropzone-5.7.0/dist/dropzone",
+			//"JeffAdmin./vendors/Formstone-master/dist/js/upload",
+*/ #}
+{{- "\n" }}		],
+		['block' => 'scriptBottom']
+	);
+?>
+
+<?php $this->Html->scriptStart(['block' => 'javaScriptBottom']); ?>
+		
+		$(document).ready( function(){
+
+			$('input[type="checkbox"]').iCheck({
+				handle: 'checkbox',
+				checkboxClass: 'icheckbox_flat-blue'
+			});
+
+{%- if textField %}
+			$('.summernote').summernote({
+				height: 180,
+				lang: 'hu-HU'
+			});
+{%- endif %}{{- "\n" }}
+
+
+<?php 		/* //$("input[type='number']").inputSpinner({ */ ?>
+			$(".spinner").inputSpinner({
+				decrementButton: "<strong>-</strong>",
+				incrementButton: "<strong>+</strong>",
+				groupClass: "", 						// css class of the resulting input-group
+				buttonsClass: "btn-outline-secondary",
+				buttonsWidth: "2.5rem",
+				textAlign: "center",
+				autoDelay: 500, 						// ms holding before auto value change
+				autoInterval: 100, 						// speed of auto value change
+				boostThreshold: 10, 					// boost after these steps
+				boostMultiplier: "auto" 				// you can also set a constant number as multiplier
+			});
+
+{%- set first = true %}
+{% for field in fields %}
+{%- set fieldData = Bake.columnData(field, schema) %}
+{%- if fieldData.type in ['date', 'datetime', 'time'] and field not in ['created', 'modified', 'updated'] %}
+{%- if first %}
+{%- set first = false %}
+			
+<?php /* https://tempusdominus.github.io/bootstrap-4/Usage/ */ ?>
+			
+			tooltips = {
+				today: 			'<?= __('Go to today') ?>',
+				clear: 			'<?= __('Clear selection') ?>',
+				close: 			'<?= __('Close the picker') ?>',
+				selectMonth: 	'<?= __('Select Month') ?>',
+				prevMonth: 		'<?= __('Previous Month') ?>',
+				nextMonth: 		'<?= __('Next Month') ?>',
+				selectYear: 	'<?= __('Select Year') ?>',
+				prevYear: 		'<?= __('Previous Year') ?>',
+				nextYear: 		'<?= __('Next Year') ?>',
+				selectDecade: 	'<?= __('Select Decade') ?>',
+				prevDecade: 	'<?= __('Previous Decade') ?>',
+				nextDecade: 	'<?= __('Next Decade') ?>',
+				prevCentury: 	'<?= __('Previous Century') ?>',
+				nextCentury: 	'<?= __('Next Century') ?>',
+				incrementHour: 	'<?= __('Increment Hour') ?>',
+				pickHour: 		'<?= __('Pick Hour') ?>',
+				decrementHour:	'<?= __('Decrement Hour') ?>',
+				incrementMinute:'<?= __('Increment Minute') ?>',
+				pickMinute: 	'<?= __('Pick Minute') ?>',
+				decrementMinute:'<?= __('Decrement Minute') ?>',
+				incrementSecond:'<?= __('Increment Second') ?>',
+				pickSecond: 	'<?= __('Pick Second') ?>',
+				decrementSecond:'<?= __('Decrement Second') ?>'
+			}
+			{{ "\n" }}
+{%- endif %}
+{%- set format = 'YYYY-MM-DD' %}
+{%- set format = 'L' %}
+{%- set cakeFormat = 'yyyy-MM-dd' %}
+{%- set jsFormat = 'YYYY-MM-DD' %}
+{%- if fieldData.type in ['time'] %}
+	{%- set format = 'HH:mm:ss' %}
+	{%- set format = 'LTS' %}
+	{%- set cakeFormat = 'H:ii:ss' %}
+	{%- set jsFormat = 'HH:mm:ss' %}
+{%- endif %}
+{%- if fieldData.type in ['datetime'] %}
+	{%- set format = 'YYYY-MM-DD HH:mm:ss' %}
+	{%- set format = 'L LTS' %}
+	{%- set cakeFormat = 'yyyy-MM-dd H:ii:ss' %}
+	{%- set jsFormat = 'YYYY-MM-DD H:mm:ss' %}
+{%- endif %}
+			$('#{{ field|replace({'_': '-'}) }}').datetimepicker({
+				locale: moment.locale("hu"),	
+				format: '{{ format }}',
+<?php //if(isset(${{ singularVar }}->{{ field }}) && ${{ singularVar }}->{{ field }} != '00:00:00' && ${{ singularVar }}->{{ field }} != '0:' ){ ?>
+<?php if(!empty(${{ singularVar }}->{{ field }})){ ?>
+				defaultDate: moment("<?= FrozenTime::parse(${{ singularVar }}->{{ field }})->i18nFormat('{{ cakeFormat }}') ?>", "{{ jsFormat }}"),
+<?php } ?>
+				//locale: moment.locale(),
+				buttons: {
+					showToday: true,
+					showClear: true,
+					showClose: true
+				},				
+				//viewDate: true,
+				icons: {
+					time: "icon-clock",
+					date: "icon-calendar",
+					up: "icon-up-big",
+					down: "icon-down-big",
+	                previous: 'icon-left-big',
+	                next: 'icon-right-big',
+	                today: 'icon-calendar',
+	                clear: 'icon-trash-empty',
+	                close: 'icon-window-close-o'
+				},
+				tooltips: tooltips
+			});
+			{{- "\n" }}
+			{{- "\n" }}
+{%- endif %}
+{%- endfor %}
+
+<?php /*	// ----------- talán ----------
+			$("input[data-bootstrap-switch]").each(function(){
+				$(this).bootstrapSwitch('state', $(this).prop('checked'));
+			});
+*/ ?>
+
+			$('#button-submit').click( function(){
+				$('#main-form').submit();
+			});			
+
+			// --- to bottom ---
+			$('.card-body').animate({opacity: '1'}, 500, 'linear');
+			$('#card-loader-icon').animate({opacity: '0'}, 1000, 'linear');
+			
+		});
+		
+<?php $this->Html->scriptEnd(); ?>
+
+{#
+/**			
+<?php /*
+			//$(".currency").inputmask('currency',{rightAlign: true  });
+			//$(".custom1").inputmask({ mask: "**[.**]", greedy: false, definitions: { '*': { validator: "[0-9]" } }, rightAlign : true });
+			//$(".custom2").inputmask({ 'alias' : 'decimal', rightAlign: true, 'groupSeparator': '.','autoGroup': true });
+			//$(".custom3").inputmask({ 'alias' : 'decimal', 'mask' : "**[.**]", rightAlign: true});
+
+			$('.numbermask').inputmask({
+				mask: 			'\\+999999999999999999',
+				removeMaskOnSubmit: true,
+				//onincomplete: function(){ alert('inputmask incomplete 2'); },
+				//placeholder: 	'__/___-___'
+			});
+
+
+
+			// #################################################################################
+			// #################################################################################
+			// #################################################################################
+
+			$('.mobilmask').inputmask({
+				mask: 			'\\+\\3\\6 99/999-99-99',
+				//prefix: "+",
+				removeMaskOnSubmit: true,
+				//onincomplete: function(){ alert('inputmask incomplete 1'); },
+				onincomplete: function(){ console.log('inputmask incomplete mobil'); }
+				//placeholder: 	'__/___-____'
+			});
+
+			//unformattedMask = Inputmask.unmask("99/999-99-99", { mask: "99/999-99-99" }); //1234567890
+
+			$('.phonemask').inputmask({
+				mask: 			'\\+\\3\\6 99/999-999',
+				removeMaskOnSubmit: true
+				//onincomplete: function(){ alert('inputmask incomplete 2'); },
+				//placeholder: 	'__/___-___'
+			});
+
+			$('.foreignphonemask').inputmask({
+				mask: 			'\\+999999999999999999',
+				removeMaskOnSubmit: true,
+				//onincomplete: function(){ alert('inputmask incomplete 2'); },
+				//placeholder: 	'__/___-___'
+			});
+
+			// #################################################################################
+			// #################################################################################
+			// #################################################################################
+
+
+			
+			//email mask
+			$(".email").inputmask({ 
+				alias: "email",
+				//mask: "*{1,20}[.*{1,20}][.*{1,20}][.*{1,20}]@*{1,20}[.*{2,6}][.*{1,2}]"
+				greedy: false,
+				onBeforePaste: function (pastedValue, opts) {
+				  pastedValue = pastedValue.toLowerCase();
+				  return pastedValue.replace("mailto:", "");
+				},
+				definitions: {
+				  '*': {
+					validator: "[0-9A-Za-z!#$%&'*+/=?^_`{|}~\-]",
+					casing: "lower"
+				  }
+				},
+				onKeyValidation: function (key, result) {
+					console.log(result);
+					console.log(key + " - " + result);
+				}	
+			});
+*/ ?>
+
+*/
+#}

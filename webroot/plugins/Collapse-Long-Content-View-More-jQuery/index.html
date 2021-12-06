@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>jQuery show-more.js Plugin Demo</title>
+        <link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+        <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="showmore-default.css">
+        <style>
+        body { font-family:'Roboto Condensed'; background-color:#fafafa;}
+        .container { margin:150px auto; max-width:640px; font-size:14px; line-height:1.7}
+            .my-button-css {
+                cursor: pointer; 
+                background-color: #069; 
+                color: white; 
+                font-family: Verdana, Arial;
+                font-size: 12px;
+                font-weight: bold;
+                text-transform: uppercase; 
+                text-align: center; 
+                padding: 10px 15px 8px 15px; 
+                margin: 5px 0 0 0;
+            }
+        </style>
+    </head>
+    
+    <body>
+    <div id="jquery-script-menu">
+<div class="jquery-script-center">
+<ul>
+<li><a href="https://www.jqueryscript.net/other/Collapse-Long-Content-View-More-jQuery.html">Download This Plugin</a></li>
+<li><a href="https://www.jqueryscript.net/">Back To jQueryScript.Net</a></li>
+</ul>
+<div class="jquery-script-ads"><script type="text/javascript"><!--
+google_ad_client = "ca-pub-2783044520727903";
+/* jQuery_demo */
+google_ad_slot = "2780937993";
+google_ad_width = 728;
+google_ad_height = 90;
+//-->
+</script>
+<script type="text/javascript"
+src="https://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script></div>
+<div class="jquery-script-clear"></div>
+</div>
+</div>
+    <div class="container">
+    <h1>jQuery show-more.js Plugin Demo</h1>
+    <div id="test" style="width: 300px">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc pulvinar, massa id dictum ornare, nulla sem tristique dui, nec interdum sapien magna at augue. Duis eros purus, sagittis in mattis placerat, pretium sit amet leo. Sed vitae consectetur lacus, et consequat erat. Interdum et malesuada fames ac ante ipsum primis in faucibus. Donec rhoncus lorem eget sapien maximus, quis feugiasavet mi porttitor. Suspendisse ut erat dolor. Phasellus porttitor pretium commodo. Curabitur eget venenatis quam, non tincidunt nisl. Aenean lobortis fermentum imperdiet. Maecenas nec ipsum tellus. Nunc mauris dui, iaculis vel ex sit amet, maximus ultricies diam. Morbi ut mi sed ex bibendum tempus. Quisque lobortis eget sem in dignissim. Donec scelerisque massa vitae lectus imperdiet pellentesque id id purus. Fusce ac est at mi mollis mattis.</div>
+    <br />
+    <div class="custom-css" style="width: 380px">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc pulvinar, massa id dictum ornare, nulla sem tristique dui, nec interdum sapien magna at augue. Duis eros purus, sagittis in mattis placerat, pretium sit amet leo. Sed vitae consectetur lacus, et consequat erat. Interdum et malesuada fames ac ante ipsum primis in faucibus. Donec rhoncus lorem eget sapien maximus, quis feugiasavet mi porttitor. Suspendisse ut erat dolor. Phasellus porttitor pretium commodo. Curabitur eget venenatis quam, non tincidunt nisl. Aenean lobortis fermentum imperdiet. Maecenas nec ipsum tellus. Nunc mauris dui, iaculis vel ex sit amet, maximus ultricies diam. Morbi ut mi sed ex bibendum tempus. Quisque lobortis eget sem in dignissim. Donec scelerisque massa vitae lectus imperdiet pellentesque id id purus. Fusce ac est at mi mollis mattis.</div>
+    <br />
+    <div id="test-last" style="width: 300px">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc pulvinar, massa id dictum ornare, nulla sem tristique dui, nec interdum sapien magna at augue. Duis eros purus, sagittis in mattis placerat, pretium sit amet leo. Sed vitae consectetur lacus, et consequat erat. Interdum et malesuada fames ac ante ipsum primis in faucibus. Donec rhoncus lorem eget sapien maximus, quis feugiasavet mi porttitor. Suspendisse ut erat dolor. Phasellus porttitor pretium commodo. Curabitur eget venenatis quam, non tincidunt nisl. Aenean lobortis fermentum imperdiet. Maecenas nec ipsum tellus. Nunc mauris dui, iaculis vel ex sit amet, maximus ultricies diam. Morbi ut mi sed ex bibendum tempus. Quisque lobortis eget sem in dignissim. Donec scelerisque massa vitae lectus imperdiet pellentesque id id purus. Fusce ac est at mi mollis mattis.</div>
+    <br />
+    <div class="custom-css" style="width: 300px">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc pulvinar, massa id dictum ornare, nulla sem tristique dui, nec interdum sapien magna at augue. Duis eros purus, sagittis in mattis placerat, pretium sit amet leo. Sed vitae consectetur lacus, et consequat erat. Interdum et malesuada fames ac ante ipsum primis in faucibus. Donec rhoncus lorem eget sapien maximus, quis feugiasavet mi porttitor. Suspendisse ut erat dolor. Phasellus porttitor pretium commodo. Curabitur eget venenatis quam, non tincidunt nisl. Aenean lobortis fermentum imperdiet. Maecenas nec ipsum tellus. Nunc mauris dui, iaculis vel ex sit amet, maximus ultricies diam. Morbi ut mi sed ex bibendum tempus. Quisque lobortis eget sem in dignissim. Donec scelerisque massa vitae lectus imperdiet pellentesque id id purus. Fusce ac est at mi mollis mattis.</div>
+
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="jquery.show-more.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('#test').showMore({
+                minheight: 74,
+                buttontxtmore: 'more content',
+                buttontxtless: 'less content',
+                animationspeed: 250
+            });
+
+            $('.custom-css').showMore({
+                minheight: 260,
+                buttontxtmore: 'more content',
+                buttontxtless: 'less content',
+                buttoncss: 'my-button-css',
+                animationspeed: 250
+            });
+
+            $('#test-last').showMore({
+                minheight: 145,
+                buttontxtmore: 'show me more content',
+                buttontxtless: 'show me less content',
+                animationspeed: 750
+            });
+            });
+        </script>
+        </div>
+        <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36251023-1']);
+  _gaq.push(['_setDomainName', 'jqueryscript.net']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+    </body>
+</html>

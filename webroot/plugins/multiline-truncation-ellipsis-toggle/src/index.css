@@ -1,0 +1,56 @@
+.tool-multiwrapbox {
+    position: relative;
+    overflow: hidden;
+}
+
+.tool-multiwrapbox .multi-text {
+    float: right;
+    margin-left: -5px;
+    width: 100%;
+    word-break: break-all;
+}
+
+.tool-multiwrapbox::before {
+    float: left;
+    width: 5px;
+    content: '';
+    height: 40px;
+}
+
+.tool-multiwrapbox .multi-text_after {
+    float: right;
+    text-align: right;
+    /* 为三个省略号的宽度 */
+    width: 6em;
+    /* 使盒子不占位置 */
+    margin-left: -6em;
+    /* 移动省略号位置 */
+    position: absolute;
+    left: 100%;
+    padding-right: 5px;
+    /* 显示更好的效果 */
+    background: -webkit-gradient(linear, left top, right top, from(rgba(255, 255, 255, 0)), to(white), color-stop(50%, white));
+    background: -moz-linear-gradient(to right, rgba(255, 255, 255, 0), white 50%, white);
+    background: -o-linear-gradient(to right, rgba(255, 255, 255, 0), white 50%, white);
+    background: -ms-linear-gradient(to right, rgba(255, 255, 255, 0), white 50%, white);
+    background: linear-gradient(to right, rgba(255, 255, 255, 0), white 50%, white);
+}
+
+.tool-multiwrapbox .op-btn {
+    color: #3780f7;
+    cursor: pointer;
+}
+
+.tool-multiwrapbox .op-btn.op-collapse {
+    display: inline-block;
+    margin: 0 0 0 15px;
+}
+
+.tool-multiwrapbox.reset-style {
+    height: auto !important;
+}
+
+.tool-multiwrapbox .multi-text_after.reset-style {
+    top: auto !important;
+    bottom: 0 !important;
+}

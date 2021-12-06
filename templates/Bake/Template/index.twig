@@ -1,0 +1,307 @@
+{#
+/**
+ * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ *
+ * Licensed under The MIT License
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          http://cakephp.org CakePHP(tm) Project
+ * @since         2.0.0
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ */
+#}
+<?php
+/**
+ * @var \{{ namespace }}\View\AppView $this
+ * @var \{{ entityClass }}[]|\Cake\Collection\CollectionInterface ${{ pluralVar }}
+ */
+?>
+<?php 
+	use Cake\Core\Configure;
+	
+	//$session 			= $this->getRequest()->getSession();
+	//$prefix 			= strtolower( $this->request->getParam('prefix') );	
+	//$controller 		= $this->request->getParam('controller');	// for DB click on <tr>
+	//$action 			= $this->request->getParam('action');		// for DB click on <tr>
+	//$passedArgs 		= $this->request->getParam('pass');			// for DB click on <tr>
+	
+	$config = Configure::read('Theme.' . $prefix);	
+	//-------> More config from \config\jeffadmin.php <------
+	//$config['index_show_id'] 			= true;
+	//$config['index_show_visible'] 	= true;
+	//$config['index_show_pos'] 		= true;
+	//$config['index_show_created'] 	= true;
+	//$config['index_show_modified'] 	= true;
+	//$config['index_show_counts'] 		= true;
+	//$config['index_show_actions'] 	= true;	
+	//$config['index_enable_view'] 		= true;
+	//$config['index_enable_edit'] 		= true;
+	//$config['index_enable_delete'] 	= true;
+	//$config['index_enable_db_click'] 	= true;
+	//$config['index_db_click_action'] 	= 'edit';	// edit, view
+	//
+	//$url = $this->Url->build(['prefix' => $prefix, 'controller' => $controller , 'action' => $config['index_db_click_action']]);
+
+	if(!isset($layout{{ pluralHumanName|replace({" ": ""}) }}LastId)){
+		$layout{{ pluralHumanName|replace({" ": ""}) }}LastId = 0;
+	}
+
+?>
+{% set fields = Bake.filterFields(fields, schema, modelObject, indexColumns, ['binary', 'text']) %}
+{% set done = [] %}
+{%- set created_modified = 0 %}
+{%- set created = 0 %}
+{%- set modified = 0 %}
+{%- for field in fields %}
+{%- if field in ['created'] %}
+	{%- set created = 1 %}
+{%- endif %}
+{%- if field in ['modified'] %}
+	{%- set modified = 1 %}
+{%- endif %}
+{%- endfor %}
+		<div class="index col-12">
+            <div class="card card-lightblue">
+				<div class="card-header">
+					<h4 class="card-title"><?= __('{{ action|humanize }}') ?>: <?= $title ?><?php
+					if(isset($search) && $search != ''){
+						echo " &rarr; " . __('filter') . ": <b>" . $search . "</b>";
+					}
+				?></h4>
+					<div class="card-tools">
+						<?= $this->element('JeffAdmin.paginateTop') ?>
+					</div>				
+				</div><!-- ./card-header -->
+			  
+				<?php //= __('{{ pluralHumanName|replace({" ": ""}) }}') ?>	
+				<div class="card-body table-responsive p-0 {{ pluralVar }}">
+<?php //debug($session->read()); ?>
+					<table class="table table-hover table-striped table-bordered text-nowrap">
+						<thead>
+							<tr>
+{{- "\n" }}								<th class="row-id-anchor"></th>
+{%- for field in fields %}
+{%- set columnData = Bake.columnData(field, schema) %}
+{%- set thLabel = '' %}
+{%- set label = '' %}
+{%- set tooltip = '' %}
+{%- if columnData.comment %}
+	{%- set thLabel = ", '" ~ columnData.comment ~ "'" %}
+	{%- set label = ", __('" ~ columnData.comment ~ "')" %}
+	{%- set tooltip = " data-bs-toggle='tooltip' data-bs-placement='top' title='<?= __('" ~ columnData.comment ~ "') ?>'" %}
+{%- endif %}
+{%- if field not in ['created', 'modified'] %}
+{%- if field in ['id'] %}{{- "\n" }}<?php if(isset($config['index_show_id']) && $config['index_show_id']){ ?>{% endif %}
+{%- if field in ['pos'] %}{{- "\n" }}<?php if(isset($config['index_show_pos']) && $config['index_show_pos']){ ?>{{- "\n" }}{% endif %}
+{%- if field in ['rank'] %}{{- "\n" }}<?php if(isset($config['index_show_rank']) && $config['index_show_rank']){ ?>{{- "\n" }}{% endif %}
+{%- if field in ['visible'] %}{{- "\n" }}<?php if(isset($config['index_show_visible']) && $config['index_show_visible']){ ?>{{- "\n" }}{% endif %}
+{%- if '_count' in field %}{{- "\n" }}<?php if(isset($config['index_show_counts']) && $config['index_show_counts']){ ?>{%- endif %}
+{{- "\n" }}								<th class="{{ field|replace({'_': '-'}) }} {{ columnData.type }}"{{ tooltip|raw }}><?= $this->Paginator->sort('{{ field }}'{{thLabel|raw}}) ?></th>
+{%- if field in ['id', 'pos', 'rank', 'visible'] or '_count' in field %}{{- "\n" }}<?php } ?>{%- endif %}
+{%- endif %}
+{%- endfor %}{{- "\n" }}
+
+{%- if (created == 1 or modified == 1) and created_modified == '0' %}
+	{%- set created_modified = 1 %}
+{%- if created == 1 or modified == 1 %}
+<?php if(isset($config['index_show_created']) && $config['index_show_created'] || isset($config['index_show_modified']) && $config['index_show_modified']){ ?>
+								<th class="datetime created-modified">{{- "\n" }}
+{%- endif %}
+{%- if created == 1 %}
+<?php 	if(isset($config['index_show_created']) && $config['index_show_created']){ ?>
+									<?= $this->Paginator->sort('created') ?>
+<?php 	} ?>{{- "\n" }}
+{%- endif %}
+{%- if created == 1 or modified == 1 %}
+<?php 	if(isset($config['index_show_created']) && $config['index_show_created'] && isset($config['index_show_modified']) && $config['index_show_modified']){ ?>
+									<br>
+<?php 	} ?>{{- "\n" }}
+{%- endif %}
+{%- if modified == 1 %}
+<?php 	if(isset($config['index_show_modified']) && $config['index_show_modified']){ ?>
+									<?= $this->Paginator->sort('modified') ?>
+<?php 	} ?>{{- "\n" }}
+{%- endif %}
+{%- if created == 1 or modified == 1 %}
+								</th>
+<?php } ?>{{- "\n" }}
+{%- endif %}
+{%- endif %}{{- "\n" }}{{- "\n" }}
+<?php if(isset($config['index_show_actions']) && $config['index_show_actions']){ ?>
+								<th class="actions"><?= __('Actions') ?></th>
+<?php } ?>
+							</tr>
+						</thead>
+						<tbody>
+					<?php foreach (${{ pluralVar }} as ${{ singularVar }}): ?>
+							<tr row-id="<?= ${{ singularVar }}->id ?>"<?php if(${{ singularVar }}->id == $layout{{ pluralHumanName|replace({" ": ""}) }}LastId){ echo ' class="table-tr-last-id"'; } ?>  prefix="<?= $prefix ?>" controller="<?= $controller ?>" action="<?= $action ?>" aria-expanded="true">
+{{- "\n" }}								<td class="row-id-anchor" value="<?= ${{ singularVar }}->id ?>"><a class="anchor" name="<?= ${{ singularVar }}->id ?>"></a></td><!-- bake-0 -->
+{%- set created_modified = 0 %}
+{%- for field in fields %}
+{%- set isKey = false %}
+{%- if associations.BelongsTo is defined %}
+{%- for alias, details in associations.BelongsTo %}
+{%- set columnData = Bake.columnData(field, schema) %}
+{%- if columnData.type not in ['text','shorttext','longtext'] %}
+{%- if field == details.foreignKey %}
+{%- set isKey = true %}
+{{- "\n" }}								<td class="{{ field|replace({'_': '-'}) }} {{ columnData.type }} link text-left" value="<?= ${{ singularVar }}->{{ field }} ?>"><?= ${{ singularVar }}->has('{{ details.property }}') ? $this->Html->link(${{ singularVar }}->{{ details.property }}->{{ details.displayField }}, ['controller' => '{{ details.controller }}', 'action' => 'view', ${{ singularVar }}->{{ details.property }}->{{ details.primaryKey[0] }}]) : '' ?></td><!-- bake-1 -->
+{%- endif %}
+{%- endif %}
+{%- endfor %}
+{%- endif %}
+{%- if isKey is not same as(true) %}
+{%- set columnData = Bake.columnData(field, schema) %}
+{%- if columnData.type not in ['text','shorttext','longtext'] %}
+{%- if columnData.type not in ['integer', 'float', 'decimal', 'biginteger', 'smallinteger', 'tinyinteger'] %}
+{%- if field in ['id'] %}<?php if(isset($config['index_show_id']) && $config['index_show_id']){ ?>{%- endif %}
+{%- if field in ['pos'] %}{{- "\n" }}<?php if(isset($config['index_show_pos']) && $config['index_show_pos']){ ?>{%- endif %}
+{%- if field in ['rank'] %}{{- "\n" }}<?php if(isset($config['index_show_rank']) && $config['index_show_rank']){ ?>{%- endif %}
+{%- if field in ['visible'] %}{{- "\n" }}<?php if(isset($config['index_show_visible']) && $config['index_show_visible']){ ?>{%- endif %}
+{%- if field not in ['created', 'modified'] %}
+{{- "\n" }}								<td class="{{ field|replace({'_': '-'}) }} {{ columnData.type }}" name="{{ field|replace({'_': '-'}) }}" value="<?= ${{ singularVar }}->{{ field }} ?>"><?= h(${{ singularVar }}->{{ field }}) ?></td><!-- bake-2 -->
+{%- endif %}
+{%- if field in ['id','pos','rank','visible'] %}{{- "\n" }}<?php } ?>{%- endif %}
+{%- else %}
+{%- if field in ['id'] %}{{- "\n" }}<?php if(isset($config['index_show_id']) && $config['index_show_id']){ ?>{%- endif %}
+{%- if field in ['pos'] %}<?php if(isset($config['index_show_pos']) && $config['index_show_pos']){ ?>{% endif %}
+{%- if '_count' in field %}{{- "\n" }}<?php if(isset($config['index_show_counts']) && $config['index_show_counts']){ ?>{% endif %}
+{%- if field in ['visible'] %}<?php if(isset($config['index_show_visible']) && $config['index_show_visible']){ ?>{%- endif %}
+{%- set value = '' %}
+{%- if columnData.type in ['date'] %}
+{%- set value = '<?= Cake\\I18n\\Time::parse($' ~ singularVar ~ '->' ~ field ~ ')->i18nFormat(\'yyyy-MM-dd\') ?>' %}
+{%- endif %}
+{%- if columnData.type in ['time'] %}
+{%- set value = '<?= Cake\\I18n\\Time::parse($' ~ singularVar ~ '->' ~ field ~ ')->i18nFormat(\'HH:mm:ss\') ?>' %}
+{%- endif %}	
+{%- if columnData.type in ['datetime'] %}
+{%- set value = '<?= Cake\\I18n\\Time::parse($' ~ singularVar ~ '->' ~ field ~ ')->i18nFormat(\'yyyy-MM-dd HH:mm:ss\') ?>' %}
+{%- endif %}
+{%- if columnData.type not in ['date','time','datetime'] %}
+{%- set value = '<?= $this->Number->format($' ~ singularVar ~ '->' ~ field ~ ') ?>' %}
+{%- endif %}
+{%- if field not in ['created', 'modified'] %}
+{{- "\n" }}								<td class="{{ field|replace({'_': '-'}) }} {{ columnData.type }}" name="{{ field|replace({'_': '-'}) }}" value="{{ value|raw }}">{{ value|raw }}</td><!-- bake-3 -->
+{%- endif %}
+{%- if field in ['id','pos','visible'] or '_count' in field %}
+{{- "\n" }}<?php } ?>
+{%- endif %}
+{%- endif %}
+{%- endif %}
+{%- endif %}
+{%- endfor %}
+{{- "\n" }}
+
+{%- if created == 1 or modified == 1 %}{{- "\n" }}
+<?php if(isset($config['index_show_created']) && $config['index_show_created'] || isset($config['index_show_modified']) && $config['index_show_modified']){ ?>
+								<td class="datetime created-modified">{{- "\n" }}
+{%- endif %}
+{%- if created == 1 %}
+<?php 	if(isset($config['index_show_created']) && $config['index_show_created']){ ?>
+									<?= h(${{ singularVar }}->created) ?>
+<?php 	} ?>{{- "\n" }}
+{%- endif %}
+{%- if created == 1 or modified == 1 %}
+<?php 	if(isset($config['index_show_created']) && $config['index_show_created'] && isset($config['index_show_modified']) && $config['index_show_modified']){ ?>
+									<br>
+<?php 	} ?>{{- "\n" }}
+{%- endif %}
+{%- if modified == 1 %}
+<?php 	if(isset($config['index_show_modified']) && $config['index_show_modified']){ ?>
+									<?= h(${{ singularVar }}->modified) ?>
+<?php 	} ?>{{- "\n" }}
+{%- endif %}
+{%- if created == 1 or modified == 1 %}
+								</td>
+<?php } ?>{{- "\n" }}
+{%- endif %}{{- "\n" }}
+{{- "\n" }}
+
+{%- set pk = '$' ~ singularVar ~ '->' ~ primaryKey[0] %}
+<?php if(isset($config['index_show_actions']) && $config['index_show_actions']){ ?>
+								<td class="actions text-center">
+<?php 	if(isset($config['index_enable_view']) && $config['index_enable_view']){ ?>					  
+									<?= $this->Html->link('<i class="fas fa-eye"></i>', ['action' => 'view', ${{ singularVar }}->id], ['escape' => false, 'class' => 'btn btn-sm bg-gradient-warning action-button-view', 'data-bs-tooltip'=>'tooltip', 'data-bs-placement'=>'top', 'title' => __('View this record')]) ?>
+<?php 	} ?>
+<?php 	if(isset($config['index_enable_edit']) && $config['index_enable_edit']){ ?>					  
+									<?= $this->Html->link('<i class="fas fa-edit"></i>', ['action' => 'edit', ${{ singularVar }}->id], ['escape' => false, 'class' => 'btn btn-sm bg-gradient-success action-button-edit', 'data-bs-tooltip'=>'tooltip', 'data-bs-placement'=>'top', 'title' => __('Edit this record')]) ?>
+<?php 	} ?>			
+<?php 	if(isset($config['index_enable_delete']) && $config['index_enable_delete']){ ?>					  
+									<?php //= $this->Form->postLink('<i class="fas fa-remove"></i>', ['action' => 'delete', ${{ singularVar }}->id], ['escape' => false, 'confirm' => __('Are you sure you want to delete # {0}?', ${{ singularVar }}->id), 'class' => 'btn btn-sm bg-gradient-danger action-button-delete']) ?>						
+									<?= $this->Form->postLink('', ['action' => 'delete', ${{ singularVar }}->id], ['class'=>'crose-btn hide-postlink action-button-delete']) ?>
+									<a href="javascript:;" class="btn btn-sm btn-danger delete postlink-delete" data-bs-tooltip="tooltip" data-bs-placement="top" title="<?= __("Delete this record!") ?>" text="<?= h(${{ singularVar }}->name) ?>" subText="<?= __("You will not be able to revert this!") ?>" confirmButtonText="<?= __("Yes, delete it!") ?>" cancelButtonText="<?= __("Cancel") ?>"><i class="icon-minus"></i></a>
+									
+<?php 	} ?>
+								</td>					  
+<?php } ?>
+							</tr>
+						<?php endforeach; ?>
+						</tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+			  
+			  <div class="card-footer clearfix">
+				<?= $this->element('JeffAdmin.paginateBottom') ?>
+				<?php //= $this->Paginator->counter(__('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')) ?>
+              </div>			  
+			  
+            </div>
+            <!-- /.card -->
+        </div>
+
+	<?php
+	if(isset($config['index_show_actions']) && $config['index_show_actions'] && isset($config['index_enable_delete']) && $config['index_enable_delete']){ 
+		$this->Html->script(
+			[
+				'JeffAdmin./dist/js/sweetalert_delete',
+			],
+			['block' => 'scriptBottom']
+		);
+	}	
+	?>
+
+<?php $this->Html->scriptStart(['block' => 'javaScriptBottom']); ?>
+
+	$(document).ready( function(){
+		
+<?php //if(isset($config['index_enable_db_click']) && $config['index_enable_db_click'] && isset($config['index_enable_edit']) && $config['index_enable_edit'] && $config['index_db_click_action'] && isset($config['index_db_click_action']) ){ ?>
+<?php 	if(isset($prefix) && isset($config['index_db_click_action']) && $config['index_db_click_action'] !== ''){ ?>
+<?php $url = $this->Url->build(['controller' => '{{ pluralHumanName|replace({" ": ""}) }}', 'action' => $config['index_db_click_action']]); ?>
+		$('tr').dblclick( function(){
+<?php /* window.location.href = '/<?= $prefix ?>/{{ pluralVar }}/<?= $config['index_db_click_action'] ?>/'+$(this).attr('row-id'); */ ?>
+			window.location.href = '<?= $url . '/' ?>' + $(this).attr('row-id');
+		});
+<?php 	} ?>
+<?php //} ?>
+
+<?php /*
+	https://stackoverflow.com/questions/179713/how-to-change-the-href-attribute-for-a-hyperlink-using-jquery  -->
+	A pagináció, ha a routerben szerepel az oldal főoldalként, akkor kell mert sessionben tárolódik néhány dolog és...
+*/ ?>
+<?php 
+	$base = '';
+	if($this->request->getAttribute('base') != '/'){
+		$base = $this->request->getAttribute('base');
+	}
+?>
+		$(".pagination a[href^='<?= $base ?>/<?= $prefix ?>?sort=']").each(function(){
+			this.href = this.href.replace("<?= $base ?>/<?= $prefix ?>", "<?= $base ?>/<?= $prefix ?>?page=1&sort=");
+		});
+		$(".pagination a[href='<?= $base ?>/<?= $prefix ?>']").each(function(){ 
+			this.href = this.href.replace("<?= $base ?>/<?= $prefix ?>", "<?= $base ?>/<?= $prefix ?>?page=1");
+		});
+<?php if(isset($controller)){ ?>
+		$(".pagination a[href^='<?= $base ?>/<?= $prefix ?>/{{ pluralVar }}?sort=']").each(function(){ 
+			this.href = this.href.replace("<?= $base ?>/<?= $prefix ?>/{{ pluralVar }}?sort=", "<?= $base ?>/<?= $prefix ?>/{{ pluralVar }}?page=1&sort=");
+		});
+		$(".pagination a[href='<?= $base ?>/<?= $prefix ?>/{{ pluralVar }}']").each(function(){ 
+			this.href = this.href.replace("<?= $base ?>/<?= $prefix ?>/{{ pluralVar }}", "<?= $base ?>/<?= $prefix ?>/{{ pluralVar }}?page=1");
+		});
+<?php } ?>
+
+	});
+	<?php $this->Html->scriptEnd(); ?>

@@ -1,0 +1,257 @@
+# LANGUAGE translation of CakePHP Application
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: CakePHP 4.2.9\n"
+"POT-Creation-Date: 2021-10-21 09:35+0000\n"
+"PO-Revision-Date: 2021-10-21 13:31+0200\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.0\n"
+"Last-Translator: \n"
+"Language: hu_HU\n"
+
+#: Controller/Component/AuthComponent.php:462
+msgid "You are not authorized to access that location."
+msgstr "Nincs jogosultsága a hely elérésére."
+
+#: Error/ExceptionRenderer.php:336
+msgid "Not Found"
+msgstr "Nem találom"
+
+#: Error/ExceptionRenderer.php:338
+msgid "An Internal Error Has Occurred."
+msgstr "Belső hiba történt."
+
+#: Http/Middleware/CsrfProtectionMiddleware.php:381
+msgid "Missing or incorrect CSRF cookie type."
+msgstr "Hiányzó vagy helytelen CSRF cookie-típus."
+
+#: Http/Middleware/CsrfProtectionMiddleware.php:385
+msgid "Missing or invalid CSRF cookie."
+msgstr "Hiányzó vagy érvénytelen CSRF cookie."
+
+#: Http/Middleware/CsrfProtectionMiddleware.php:408
+#: Http/Middleware/SessionCsrfProtectionMiddleware.php:265
+msgid ""
+"CSRF token from either the request body or request headers did not match or "
+"is missing."
+msgstr ""
+"A kéréstörzs vagy a kérésfejlécek CSRF -tokenje nem egyezett, vagy hiányzik."
+
+#: Http/Middleware/SessionCsrfProtectionMiddleware.php:247
+msgid "Missing or incorrect CSRF session key"
+msgstr "Hiányzó vagy helytelen CSRF munkamenetkulcs"
+
+#: Http/Response.php:1493
+msgid "The requested file contains `..` and will not be read."
+msgstr "A kért fájl \"..\" -t tartalmaz, és nem olvasható."
+
+#: Http/Response.php:1501
+msgid "The requested file was not found"
+msgstr "A kért fájl nem található"
+
+#: I18n/Number.php:116
+msgid "{0,number,#,###.##} KB"
+msgstr "{0,number,#,###.##} KB"
+
+#: I18n/Number.php:118
+msgid "{0,number,#,###.##} MB"
+msgstr "{0,number,#,###.##} MB"
+
+#: I18n/Number.php:120
+msgid "{0,number,#,###.##} GB"
+msgstr "{0,number,#,###.##} GB"
+
+#: I18n/Number.php:122
+msgid "{0,number,#,###.##} TB"
+msgstr "{0,number,#,###.##} TB"
+
+#: I18n/Number.php:114
+msgid "{0,number,integer} Byte"
+msgid_plural "{0,number,integer} Bytes"
+msgstr[0] "{0,number,integer} Bájt"
+msgstr[1] "{0,number,integer} Bájt"
+
+#: I18n/RelativeTimeFormatter.php:86
+msgid "{0} from now"
+msgstr "{0} mostantól"
+
+#: I18n/RelativeTimeFormatter.php:86
+msgid "{0} ago"
+msgstr "{0} ezelőtt"
+
+#: I18n/RelativeTimeFormatter.php:89
+msgid "{0} after"
+msgstr "{0} után"
+
+#: I18n/RelativeTimeFormatter.php:89
+msgid "{0} before"
+msgstr "{0} előtt"
+
+#: I18n/RelativeTimeFormatter.php:120
+msgid "just now"
+msgstr "épp most"
+
+#: I18n/RelativeTimeFormatter.php:157
+msgid "about a second ago"
+msgstr "körülbelül egy másodperce"
+
+#: I18n/RelativeTimeFormatter.php:158
+msgid "about a minute ago"
+msgstr "körülbelül egy perce"
+
+#: I18n/RelativeTimeFormatter.php:159
+msgid "about an hour ago"
+msgstr "körülbelül egy órája"
+
+#: I18n/RelativeTimeFormatter.php:160 I18n/RelativeTimeFormatter.php:370
+msgid "about a day ago"
+msgstr "körülbelül egy napja"
+
+#: I18n/RelativeTimeFormatter.php:161 I18n/RelativeTimeFormatter.php:371
+msgid "about a week ago"
+msgstr "körülbelül egy hete"
+
+#: I18n/RelativeTimeFormatter.php:162 I18n/RelativeTimeFormatter.php:372
+msgid "about a month ago"
+msgstr "körülbelül egy hónapja"
+
+#: I18n/RelativeTimeFormatter.php:163 I18n/RelativeTimeFormatter.php:373
+msgid "about a year ago"
+msgstr "körülbelül egy éve"
+
+#: I18n/RelativeTimeFormatter.php:174
+msgid "in about a second"
+msgstr "körülbelül egy másodperc múlva"
+
+#: I18n/RelativeTimeFormatter.php:175
+msgid "in about a minute"
+msgstr "körülbelül egy perc múlva"
+
+#: I18n/RelativeTimeFormatter.php:176
+msgid "in about an hour"
+msgstr "körülbelül egy óra múlva"
+
+#: I18n/RelativeTimeFormatter.php:177 I18n/RelativeTimeFormatter.php:384
+msgid "in about a day"
+msgstr "körülbelül egy nap múlva"
+
+#: I18n/RelativeTimeFormatter.php:178 I18n/RelativeTimeFormatter.php:385
+msgid "in about a week"
+msgstr "körülbelül egy hét múlva"
+
+#: I18n/RelativeTimeFormatter.php:179 I18n/RelativeTimeFormatter.php:386
+msgid "in about a month"
+msgstr "körülbelül egy hónap múlva"
+
+#: I18n/RelativeTimeFormatter.php:180 I18n/RelativeTimeFormatter.php:387
+msgid "in about a year"
+msgstr "körülbelül egy év múlva"
+
+#: I18n/RelativeTimeFormatter.php:342
+msgid "today"
+msgstr "ma"
+
+#: I18n/RelativeTimeFormatter.php:409
+msgid "%s ago"
+msgstr "%s ezelőtt"
+
+#: I18n/RelativeTimeFormatter.php:410
+msgid "on %s"
+msgstr "itt: %"
+
+#: I18n/RelativeTimeFormatter.php:53 I18n/RelativeTimeFormatter.php:132
+#: I18n/RelativeTimeFormatter.php:354
+msgid "{0} year"
+msgid_plural "{0} years"
+msgstr[0] "{0} év"
+msgstr[1] "{0} év"
+
+#: I18n/RelativeTimeFormatter.php:57 I18n/RelativeTimeFormatter.php:135
+#: I18n/RelativeTimeFormatter.php:357
+msgid "{0} month"
+msgid_plural "{0} months"
+msgstr[0] "{0} hónap"
+msgstr[1] "{0} hónap"
+
+#: I18n/RelativeTimeFormatter.php:63 I18n/RelativeTimeFormatter.php:138
+#: I18n/RelativeTimeFormatter.php:360
+msgid "{0} week"
+msgid_plural "{0} weeks"
+msgstr[0] "{0} hét"
+msgstr[1] "{0} hét"
+
+#: I18n/RelativeTimeFormatter.php:65 I18n/RelativeTimeFormatter.php:141
+#: I18n/RelativeTimeFormatter.php:363
+msgid "{0} day"
+msgid_plural "{0} days"
+msgstr[0] "{0} nap"
+msgstr[1] "{0} nap"
+
+#: I18n/RelativeTimeFormatter.php:70 I18n/RelativeTimeFormatter.php:144
+msgid "{0} hour"
+msgid_plural "{0} hours"
+msgstr[0] "{0} óra"
+msgstr[1] "{0} óra"
+
+#: I18n/RelativeTimeFormatter.php:74 I18n/RelativeTimeFormatter.php:147
+msgid "{0} minute"
+msgid_plural "{0} minutes"
+msgstr[0] "{0} perc"
+msgstr[1] "{0} perc"
+
+#: I18n/RelativeTimeFormatter.php:78 I18n/RelativeTimeFormatter.php:150
+msgid "{0} second"
+msgid_plural "{0} seconds"
+msgstr[0] "{0} másodperc"
+msgstr[1] "{0} másodperc"
+
+#: ORM/RulesChecker.php:63
+msgid "This value is already in use"
+msgstr "Ez az érték már használatban van"
+
+#: ORM/RulesChecker.php:110
+msgid "This value does not exist"
+msgstr "Ez az érték nem létezik"
+
+#: ORM/RulesChecker.php:232
+msgid "Cannot modify row: a constraint for the `{0}` association fails."
+msgstr ""
+"A sor nem módosítható: a „{0}” társításra vonatkozó megkötés sikertelen."
+
+#: ORM/RulesChecker.php:270
+msgid "The count does not match {0}{1}"
+msgstr "A szám nem egyezik a következővel: {0} {1}"
+
+#: Utility/Text.php:924
+msgid "and"
+msgstr "és"
+
+#: Validation/Validator.php:2527
+msgid "This field is required"
+msgstr "Ezt a mezőt kötelező megadni"
+
+#: Validation/Validator.php:2547 View/Form/ArrayContext.php:249
+msgid "This field cannot be left empty"
+msgstr "Ezt a mezőt nem lehet üresen hagyni"
+
+#: Validation/Validator.php:2699
+msgid "The provided value is invalid"
+msgstr "A megadott érték érvénytelen"
+
+#: View/Helper/FormHelper.php:984
+msgid "Edit {0}"
+msgstr "Szerkeszt {0}"
+
+#: View/Helper/FormHelper.php:986
+msgid "New {0}"
+msgstr "Új {0}"
+
+#: View/Helper/FormHelper.php:1896
+msgid "Submit"
+msgstr "Mentés"

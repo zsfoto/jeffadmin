@@ -1,0 +1,66 @@
+{#
+/**
+ * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ *
+ * Licensed under The MIT License
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          http://cakephp.org CakePHP(tm) Project
+ * @since         2.0.0
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ */
+#}
+    /**
+     * setQueryParams method
+     *
+     * @param: null
+     * @return void ... 
+	 * @do: $this->session->write($this->controller . '...', ...);
+     */
+	public function setQueryParams(){
+		$this->controller 		= $this->request->getParam('controller');
+		$this->action 			= $this->request->getParam('action');
+		$this->lastPage 		= $this->request->getQuery('page');
+		$this->orderSort 		= $this->request->getQuery('sort');
+		$this->orderDirection 	= $this->request->getQuery('direction');
+		
+		if($this->action == 'index'){
+			if($this->lastPage === null){
+				$this->lastPage = 1;
+			}
+			$this->session->write($this->controller . 'LastPage', $this->lastPage);
+		}else{
+			$this->lastPage = $this->session->read($this->controller . 'LastPage');
+		}
+
+		if($this->action == 'index'){
+			if($this->orderSort === null){
+				$this->session->write($this->controller . 'OrderSort', 'name');
+			}else{
+				$this->session->write($this->controller . 'OrderSort', $this->orderSort);
+			}
+		}else{
+			$this->orderSort = $this->session->read($this->controller . 'OrderSort');
+		}
+
+		if($this->action == 'index'){
+			if($this->orderDirection === null){
+				$this->session->write($this->controller . 'OrderDirection', 'asc');
+			}else{
+				$this->session->write($this->controller . 'OrderDirection', $this->orderDirection);
+			}
+		}else{
+			$this->orderDirection = $this->session->read($this->controller . 'OrderDirection');
+		}
+
+		if($this->session->read($this->controller . 'LastId') === null){
+			$this->lastId = 0;
+			$this->session->write($this->controller . 'LastId', 0);
+		}
+		$this->lastId = $this->session->read($this->controller . 'LastId');
+		$this->set($this->controller . 'LastId', $this->lastId);
+
+	}

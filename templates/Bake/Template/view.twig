@@ -1,0 +1,354 @@
+{#
+/**
+ * CakePHP(tm): Rapid Development Framework (http://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ *
+ * Licensed under The MIT License
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          http://cakephp.org CakePHP(tm) Project
+ * @since         2.0.0
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ */
+#}
+<?php // Baked at {{ "now"|date("Y.m.d. H:i:s", "Europe/Budapest") }}  ?>
+<?php
+/**
+ * @var \{{ namespace }}\View\AppView $this
+ * @var \{{ entityClass }} ${{ singularVar }}
+ */
+	use Cake\Core\Configure;
+
+	$session 			= $this->getRequest()->getSession();
+	$prefix 			= strtolower( $this->request->getParam('prefix') );	
+	$controller 		= $this->request->getParam('controller');	// for DB click on <tr>
+	$action 			= $this->request->getParam('action');		// for DB click on <tr>
+	//$passedArgs 		= $this->request->getParam('pass');			// for DB click on <tr>
+	
+	$config = Configure::read('Theme.' . $prefix);	
+	//-------> More config from \config\jeffadmin.php <------
+	//$config['index_show_id'] 			= true;
+	//
+	//$url = $this->Url->build(['prefix' => $prefix, 'controller' => $controller , 'action' => $config['index_db_click_action']]);
+
+	if(!isset($layout{{ pluralHumanName|replace({" ": ""}) }}LastId)){
+		$layout{{ pluralHumanName|replace({" ": ""}) }}LastId = 0;
+	}
+	
+?>
+{% set hasTextField = false %}
+{% set associations = {'BelongsTo': [], 'HasOne': [], 'HasMany': [], 'BelongsToMany': []}|merge(associations) %}
+{% set fieldsData = Bake.getViewFieldsData(fields, schema, associations) %}
+{% set associationFields = fieldsData.associationFields %}
+{% set groupedFields = fieldsData.groupedFields %}
+{% set pK = '$' ~ singularVar ~ '->' ~ primaryKey[0] %}
+		<div class="view col-sm-10 {{ pluralVar }}">
+			<div class="card card-lightblue">
+				<div class="card-header">
+					<h3 class="card-title"><?= $title ?>: <?= h(${{ singularVar }}->{{ displayField }}) ?></h3>
+				</div><!-- /.card-header -->
+{% set done = [] %}
+				<div class="card-body">
+				
+					<div class="form-group row">
+						<label for="{{ displayField }}" class="col-sm-2 col-form-label"><?= __('id') ?>:</label>
+						<div class="col-sm-9">
+							<div class="view-field non-associated">
+								<?= {{ pK|raw }} ?>
+							</div>
+						</div>
+					</div>
+{% if groupedFields['string'] %}
+{% for field in groupedFields['string'] %}
+{% if associationFields[field] is defined %}
+{% set details = associationFields[field] %}
+					<div class="form-group row"><!-- 1. -->
+						<label for="{{ displayField }}" class="col-sm-2 col-form-label"><?= __('{{ details.property|humanize }}') ?>:</label>
+						<div class="col-sm-9">
+							<div class="view-field associated">
+								<?= ${{ singularVar }}->has('{{ details.property }}') ? $this->Html->link(${{ singularVar }}->{{ details.property }}->{{ details.displayField }}, ['controller' => '{{ details.controller }}', 'action' => 'view', ${{ singularVar }}->{{ details.property }}->{{ details.primaryKey[0] }}], ['escape' => false, 'class' => 'btn btn-sm btn-default']) : '&nbsp;' ?>
+							</div>
+						</div>
+					</div>
+{% else %}
+
+					<div class="form-group row"><!-- 2. -->
+						<label for="{{ field|replace({'_': '-'}) }}" class="col-sm-2 col-form-label"><?= __('{{ field|humanize }}') ?>:</label>
+						<div class="col-sm-9">
+							<div class="view-field non-associated">
+								<?php 
+									if(!empty(${{ singularVar }}->{{ field }})){
+										echo h(${{ singularVar }}->{{ field }});
+									}else{
+										echo "&nbsp;";
+									}
+								?>
+							</div>
+						</div>
+					</div>
+{% endif %}
+{% endfor %}
+{% endif %}
+{% if associations.HasOne %}
+{% for alias, details in associations.HasOne %}
+
+					<div class="form-group row"><!-- 3. -->
+						<label for="{{ field|replace({'_': '-'}) }}" class="col-sm-2 col-form-label"><?= __('{{ alias|underscore|singularize|humanize }}') ?>:</label>
+						<div class="col-sm-9">
+							<div class="view-field has-one">
+								<?= ${{ singularVar }}->has('{{ details.property }}') ? $this->Html->link(${{ singularVar }}->{{ details.property }}->{{ details.displayField }}, ['controller' => '{{ details.controller }}', 'action' => 'view', ${{ singularVar }}->{{ details.property }}->{{ details.primaryKey[0] }}]) : '&nbsp;' ?>
+							</div>
+						</div>
+					</div>
+{% endfor %}
+{% endif %}
+{% if groupedFields.number %}
+{% for field in groupedFields.number %}
+{% if field not in ['id'] %}
+
+					<div class="form-group row"><!-- 4. -->
+						<label for="{{ field|replace({'_': '-'}) }}" class="col-sm-2 col-form-label"><?= __('{{ field|humanize }}') ?>:</label>
+						<div class="col-sm-9">
+							<div class="view-field number">
+								<?php
+									if(!empty(${{ singularVar }}->{{ field }})){
+										echo $this->Number->format(${{ singularVar }}->{{ field }});
+									}else{
+										echo "&nbsp;";
+									}
+								?>
+							</div>
+						</div>
+					</div>
+{% endif %}
+{% endfor %}
+{% endif %}
+{% if groupedFields.date %}
+{% for field in groupedFields.date %}
+
+					<div class="form-group row"><!-- 5. -->
+						<label for="{{ field|replace({'_': '-'}) }}" class="col-sm-2 col-form-label"><?= __('{{ field|humanize }}') ?>:</label>
+						<div class="col-sm-9">
+							<div class="view-field date">
+								<?php
+									if(!empty(${{ singularVar }}->{{ field }})){
+										echo h(${{ singularVar }}->{{ field }});
+									}else{
+										echo "&nbsp;";
+									}
+								?>
+							</div>
+						</div>
+					</div>
+{% endfor %}
+{% endif %}
+{% if groupedFields.boolean %}
+{% for field in groupedFieslds.boolean %}
+
+					<div class="form-group row"><!-- 6. -->
+						<label for="{{ field|replace({'_': '-'}) }}" class="col-sm-2 col-form-label"><?= __('{{ field|humanize }}') ?>:</label>
+						<div class="col-sm-9">
+							<div class="view-field boolean">
+								<?php
+									if(!empty(${{ singularVar }}->{{ field }})){
+										echo ${{ singularVar }}->{{ field }} ? __('Yes') : __('No');
+									}else{
+										echo "&nbsp;";
+									}
+								?>
+							</div>
+						</div>
+					</div>
+{% endfor %}
+{% endif %}
+{% if groupedFields.text %}
+{% set hasTextField = true %}
+{% for field in groupedFields.text %}
+
+					<div class="form-group row"><!-- 7. -->
+						<label for="{{ field|replace({'_': '-'}) }}" class="col-sm-2 col-form-label"><?= __('{{ field|humanize }}') ?>:</label>
+						<div class="col-sm-9">
+							<div class="view-field text show-more">
+								<?php // $this->Text->autoParagraph(h(${{ singularVar }}->{{ field }})); ?>
+								<?php
+									if(!empty(${{ singularVar }}->{{ field }})){
+										//echo $this->Text->autoParagraph(${{ singularVar }}->{{ field }}) . "<br>";
+										echo ${{ singularVar }}->{{ field }} . "<br>";
+									}else{
+										echo "&nbsp;";
+									}
+								?>
+							</div>
+						</div>
+					</div>
+{% endfor %}
+{% endif %}
+	
+				</div><!-- /.card-body -->
+				
+				<div class="card-footer">
+					<?= $this->Html->link('<span class="btn-label"><i class="fa fa-arrow-left"></i></span>' . __('Back to list'), ['action' => 'index', '#' => $id], ['class'=>'offset-sm-2 btn btn-info', 'role'=>'button', 'escape'=>false,  'data-bs-tooltip'=>'tooltip', 'data-bs-placement'=>'top', 'title' => __('Back to list') ] ) ?>
+				</div><!-- /.card-footer -->
+				
+			</div><!-- /. card -->
+		</div><!-- /. col-sm-10 -->
+		<!-- ################################################################################################################ -->
+
+		<!-- ################################################################################################################ -->
+		<div class="col-12">
+			<div class="card card-primary card-outline card-outline-tabs">
+
+				<div class="card-header p-0 border-bottom-0">
+					<ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
+						<li class="pt-2 px-3">
+							<h3 class="card-title" style="font-size: 22px;"><?= __('Related tables') ?></h3>
+						</li>
+{% set first = true %}
+{% set relations = associations.BelongsToMany|merge(associations.HasMany) %}
+{% for alias, details in relations %}
+{% set active = '' %}
+{% set ariaSelected = 'false' %}
+{% set otherSingularVar = alias|variable %}
+{% set otherPluralHumanName = details.controller|underscore|humanize %}
+{% if first == true %}
+{% set active = ' active' %}
+{% set ariaSelected = 'true' %}
+{% endif %}
+<?php if (!empty(${{ singularVar }}->{{ details.property }})): ?>
+						<li class="nav-item view-tab">
+							<a class="nav-link{{ active|raw }}" id="related-tab-{{ details.property|replace({'_': '-'}) }}" data-toggle="pill" href="#tab-{{ details.property|replace({'_': '-'}) }}" role="tab" aria-controls="aria-tab-{{ details.property|replace({'_': '-'}) }}" aria-selected="{{ ariaSelected }}"><?= __('{{ otherPluralHumanName }}') ?></a>
+						</li>
+{% set first = false %}
+<?php endif; ?>
+{% endfor %}
+					</ul>
+				</div>
+
+
+				<div class="card-body p-0">
+					<div class="tab-content" id="custom-tabs-four-tabContent">
+{% set first = true %}
+{% set relations = associations.BelongsToMany|merge(associations.HasMany) %}
+{% for alias, details in relations %}
+{% set active = '' %}
+{% set otherSingularVar = alias|variable %}
+{% set otherPluralHumanName = details.controller|underscore|humanize %}
+{% if first == true %}
+{% set active = ' active show' %}
+{% endif %}
+<?php if (!empty(${{ singularVar }}->{{ details.property }})) : ?>
+						<div class="tab-pane fade{{ active|raw }}" id="tab-{{ details.property|replace({'_': '-'}) }}" role="tabpanel" aria-labelledby="aria-tab-{{ details.property|replace({'_': '-'}) }}">
+{% set first = false %}
+<?php /* */ ?>
+
+
+
+							<div class="col-12 table-responsive p-0">
+
+								<table class="table table-bordered table-striped table-hover">
+									<thead>
+										<tr>
+{% for field in details.fields %}
+											<th class="{{ field|replace({'_': '-'}) }}"><?= __('{{ field|humanize }}') ?></th>
+{% endfor %}
+<?php if(isset($config['index_show_actions']) && $config['index_show_actions']){ ?>
+											<th class="actions"><?= __('Actions') ?></th>
+<?php } ?>
+										</tr>
+									</thead>
+									<tbody>
+										<?php foreach (${{ singularVar }}->{{ details.property }} as ${{ otherSingularVar }}): ?>
+										<tr aria-expanded="true">
+{% for field in details.fields %}
+{% set value = 'value' %}
+{% if field in ['visible'] %}
+{% set value = 'visible' %}
+{% endif %}
+{% if field in ['to_delete'] %}
+{% set value = 'to-delete' %}
+{% endif %}
+{% endfor %}
+{% set otherPk = '$' ~ otherSingularVar ~ '->' ~ details.primaryKey[0] %}
+<?php if($config['index_show_actions'] !== null && $config['index_show_actions']){ ?>
+											<td class="actions text-center">
+<?php 	if($config['index_enable_view'] !== null && $config['index_enable_view']){ ?>					  
+												<?= $this->Html->link('<i class="fas fa-eye"></i>', ['controller' => '{{ details.controller }}', 'action' => 'view', {{ otherPk|raw }}], ['escape' => false, 'class' => 'btn btn-sm bg-gradient-warning action-button-view', 'data-bs-tooltip'=>'tooltip', 'data-bs-placement'=>'top', 'title' => __('View this record')]) ?>
+<?php 	} ?>
+<?php 	if($config['index_enable_edit'] !== null && $config['index_enable_edit']){ ?>					  
+												<?= $this->Html->link('<i class="fas fa-edit"></i>', ['controller' => '{{ details.controller }}', 'action' => 'edit', {{ otherPk|raw }}], ['escape' => false, 'class' => 'btn btn-sm bg-gradient-success action-button-edit', 'data-bs-tooltip'=>'tooltip', 'data-bs-placement'=>'top', 'title' => __('Edit this record')]) ?>
+<?php 	} ?>			
+<?php 	if($config['index_enable_delete'] !== null && $config['index_enable_delete']){ ?>					  
+												<?php //= $this->Form->postLink('<i class="fas fa-remove"></i>', ['action' => 'delete', ${{ singularVar }}->id], ['escape' => false, 'confirm' => __('Are you sure you want to delete # {0}?', ${{ singularVar }}->id), 'class' => 'btn btn-sm bg-gradient-danger action-button-delete']) ?>						
+												<?= $this->Form->postLink('', ['controller' => '{{ details.controller }}', 'action' => 'delete', {{ otherPk|raw }}], ['class'=>'crose-btn hide-postlink action-button-delete']) ?>
+												<a href="javascript:;" class="btn btn-sm btn-danger delete postlink-delete" data-bs-tooltip="tooltip" data-bs-placement="top" title="<?= __("Delete this record!") ?>" text="<?= h(${{ otherSingularVar }}->name) ?>" subText="<?= __("You will not be able to revert this!") ?>" confirmButtonText="<?= __("Yes, delete it!") ?>" cancelButtonText="<?= __("Cancel") ?>"><i class="icon-minus"></i></a>
+<?php 	} ?>
+											</td>					  
+<?php } ?>	
+										</tr>
+										<?php endforeach; ?>
+									</tbody>
+								</table>
+
+								<div class="card-footer clearfix">
+									&nbsp;
+								</div>			  
+
+							</div><!-- /.card -->
+
+						</div>
+<?php endif; ?>
+{% endfor %}
+
+					</div>
+				</div><!-- /.card -->
+			</div>
+		</div>
+
+<!-- ######################################################################################################################## -->
+<!-- ######################################################################################################################## -->
+<!-- ######################################################################################################################## -->
+{% if hasTextField == true %}
+
+<?php
+	$this->Html->css(
+		[
+			'JeffAdmin./plugins/multiline-truncation-ellipsis-toggle/src/index',
+			'JeffAdmin./plugins/Collapse-Long-Content-View-More-jQuery/showmore-default',
+		],
+		['block' => true]
+	);
+
+	$this->Html->script(
+		[
+			'JeffAdmin./plugins/multiline-truncation-ellipsis-toggle/src/jquery.multiTextToggleCollapse',
+			'JeffAdmin./plugins/Collapse-Long-Content-View-More-jQuery/jquery.show-more',			
+			'JeffAdmin./dist/js/sweetalert_delete',
+		],
+		['block' => 'scriptBottom']
+	);
+?>
+
+<?php $this->Html->scriptStart(['block' => 'javaScriptBottom']); ?>
+
+	$(document).ready( function(){
+		//$(".view .text").multiTextToggleCollapse({
+		//	line:4
+		//});
+		
+		$('.show-more').showMore({
+			minheight: 100,
+			buttontxtmore: '<?= __('&darr;&nbsp;more content&nbsp;&darr;') ?>',
+			buttontxtless: '<?= __('&uarr;&nbsp;less content&nbsp;&uarr;') ?>',
+			//buttoncss: 'my-button-css',
+			animationspeed: 250
+		});
+		
+	});
+
+<?php $this->Html->scriptEnd(); ?>
+
+{% else %}
+<?php //NINCS TEXT ?>
+{% endif %}

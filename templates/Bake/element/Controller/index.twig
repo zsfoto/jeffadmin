@@ -1,0 +1,170 @@
+{#
+/**
+ * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ *
+ * Licensed under The MIT License
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          http://cakephp.org CakePHP(tm) Project
+ * @since         2.0.0
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ */
+#}
+    /**
+     * Index method
+     *
+	 * @param string|null $param: if($param !== null && $param == 'clear-filter')...
+     * @return \Cake\Http\Response|null|void Renders view
+     */
+    public function index($param = null)
+    {
+		$search = null;
+		${{ pluralName }} = null;
+		
+		$this->set('title', __('{{ pluralName|humanize }}'));
+
+		//$this->config['index_number_of_rows'] = 10;
+		if($this->config['index_number_of_rows'] === null){
+			$this->config['index_number_of_rows'] = 20;
+		}
+		
+		// Clear filter from session
+		if($param !== null && $param == 'clear-filter'){
+			$this->session->delete('Layout.' . $this->controller . '.Search');
+			$this->redirect( $this->request->referer() );
+		}		
+		
+{% set belongsTo = Bake.aliasExtractor(modelObj, 'BelongsTo') %}
+        $this->paginate = [
+{% if belongsTo %}
+            'contain' => {{ Bake.exportArray(belongsTo)|raw }},
+{% endif %}
+			'conditions' => [
+				//'{{ currentModelName }}.name' 		=> 1,
+				//'{{ currentModelName }}.visible' 		=> 1,
+				//'{{ currentModelName }}.created >= ' 	=> new \DateTime('-10 days'),
+				//'{{ currentModelName }}.modified >= '	=> new \DateTime('-10 days'),
+			],
+			/*
+			// Nem tanácsos az order-t itt használni, mert pl az edit után az utolsó  ordert ugyan beálíltja, de
+			// kiegészíti ezzel s így az utoljára mentett rekord nem lesz megtalálható az X-edik oldalon, mert az az elsőre kerül.
+			// A felhasználó állítson be rendezettséget magának! Kivételes esetek persze lehetnek!
+			*/
+			'order' => [
+				//'{{ currentModelName }}.id' 			=> 'desc',
+				//'{{ currentModelName }}.name' 		=> 'asc',
+				//'{{ currentModelName }}.visible' 		=> 'desc',
+				//'{{ currentModelName }}.pos' 			=> 'desc',
+				//'{{ currentModelName }}.rank' 		=> 'asc',
+				//'{{ currentModelName }}.created' 		=> 'desc',
+				//'{{ currentModelName }}.modified' 	=> 'desc',
+			],
+			'limit' => $this->config['index_number_of_rows'],
+			'maxLimit' => $this->config['index_number_of_rows'],
+			//'sortableFields' => ['id', 'name', 'created', '...'],
+			//'paramType' => 'querystring',
+			//'fields' => ['{{ currentModelName }}.id', '{{ currentModelName }}.name', ...],
+			//'finder' => 'published',
+        ];
+
+		//$this->paging = $this->session->read('Layout.' . $this->controller . '.Paging');
+
+		if( $this->paging === null){
+			$this->paginate['order'] = [
+				//'{{ currentModelName }}.id' 			=> 'desc',
+				//'{{ currentModelName }}.name' 		=> 'asc',
+				//'{{ currentModelName }}.visible' 		=> 'desc',
+				//'{{ currentModelName }}.pos' 			=> 'desc',
+				//'{{ currentModelName }}.rank' 		=> 'asc',
+				//'{{ currentModelName }}.created' 		=> 'desc',
+				//'{{ currentModelName }}.modified' 	=> 'desc',
+			];
+		}else{
+			if($this->request->getQuery('sort') === null && $this->request->getQuery('direction') === null){
+				$this->paginate['order'] = [
+					// If not in URL-ben, then come from sessinon...
+					$this->paging['{{ currentModelName }}']['sort'] => $this->paging['{{ currentModelName }}']['direction']	
+				];
+			}
+		}
+
+		if($this->request->getQuery('page') === null && !isset($this->paging['{{ currentModelName }}']['page']) ){
+			$this->paginate['page'] = 1;
+		}else{
+			$this->paginate['page'] = (isset($this->paging['{{ currentModelName }}']['page'])) ? $this->paging['{{ currentModelName }}']['page'] : 1;
+		}
+		
+		// -- Filter --
+		if ($this->request->is('post') || $this->session->read('Layout.' . $this->controller . '.Search') !== null && $this->session->read('Layout.' . $this->controller . '.Search') !== []) {
+				
+			if( $this->request->is('post') ){
+				$search = $this->request->getData();
+				$this->session->write('Layout.' . $this->controller . '.Search', $search);
+				if($search !== null && $search['s'] !== null && $search['s'] == ''){
+					$this->session->delete('Layout.' . $this->controller . '.Search');
+					return $this->redirect([
+						'controller' => $this->controller, 
+						'action' => 'index', 
+						//'?' => [			// Not tested!!!
+						//	'page'		=> $this->paging['{{ currentModelName }}']['page'], 	// Vagy 1
+						//	'sort'		=> $this->paging['{{ currentModelName }}']['sort'], 
+						//	'direction'	=> $this->paging['{{ currentModelName }}']['direction'],
+						//]
+					]);
+				}
+			}else{
+				if($this->session->check('Layout.' . $this->controller . '.Search')){
+					$search = $this->session->read('Layout.' . $this->controller . '.Search');
+				}
+			}
+
+			$this->set('search', $search['s']);
+			
+			$search['s'] = '%'.str_replace(' ', '%', $search['s']).'%';
+			//$this->paginate['conditions'] = ['{{ currentModelName }}.name LIKE' => $q ];
+			$this->paginate['conditions'][] = [
+				'OR' => [
+					['{{ currentModelName }}.name LIKE' => $search['s'] ],
+					//['{{ currentModelName }}.title LIKE' => $search['s'] ], // ... just add more fields
+				]
+			];
+			
+		}
+		// -- /.Filter --
+		
+		try {
+			${{ pluralName }} = $this->paginate($this->{{ currentModelName }});
+		} catch (NotFoundException $e) {
+			$paging = $this->request->getAttribute('paging');
+			if($paging['{{ currentModelName }}']['prevPage'] !== null && $paging['{{ currentModelName }}']['prevPage']){
+				if($paging['{{ currentModelName }}']['page'] !== null && $paging['{{ currentModelName }}']['page'] > 0){
+					return $this->redirect([
+						'controller' => $this->controller, 
+						'action' => 'index', 
+						'?' => [
+							'page'		=> 1,	//$this->paging['{{ currentModelName }}']['page'],
+							'sort'		=> $this->paging['{{ currentModelName }}']['sort'],
+							'direction'	=> $this->paging['{{ currentModelName }}']['direction'],
+						],
+					]);			
+				}
+			}
+			
+		}
+
+		$paging = $this->request->getAttribute('paging');
+
+		if($this->paging !== $paging){
+			$this->paging = $paging;
+			$this->session->write('Layout.' . $this->controller . '.Paging', $paging);
+		}
+
+		$this->set('paging', $this->paging);
+		$this->set('layout' . $this->controller . 'LastId', $this->session->read('Layout.' . $this->controller . '.LastId'));
+		$this->set(compact('{{ pluralName }}'));
+		
+	}
+
