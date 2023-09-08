@@ -81,4 +81,28 @@ composer require zsfoto/jeffadmin
 
 
 
+	Add to route Admin (and Api, if you want)
+```
+    $routes->prefix('Admin', function (RouteBuilder $builder) {
+        $builder->scope('/', function (RouteBuilder $builder) {
+            $builder->setExtensions(['json', 'xml', 'xlsx']);
+
+            $builder->connect('/', ['controller' => 'Notes', 'action' => 'index']);
+
+            $builder->fallbacks(DashedRoute::class);
+        });
+	});
+
+
+    $routes->prefix('Api', function (RouteBuilder $builder) {
+        $builder->scope('/', function (RouteBuilder $builder) {
+            $builder->setExtensions(['json', 'xml', 'xlsx']);
+
+            $builder->connect('/', ['controller' => 'Notes', 'action' => 'index']);
+            
+            $builder->fallbacks(DashedRoute::class);
+        });
+	});
+```
+
 
