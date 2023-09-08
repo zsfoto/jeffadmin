@@ -24,21 +24,21 @@ composer require zsfoto/jeffadmin
 	}
 ```
 
-	composer.json
+	Check the composer.json
 ```
     "autoload": {
         "psr-4": {
-            "App\\": "src/",
-            "App\\": "vendor/zsfoto/jeffadmin/"
+            "JeffAdmin\\": "src/",
+			"JeffAdmin\\": "plugins/JeffAdmin/src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "App\\Test\\": "tests/",
+            "JeffAdmin\\Test\\": "tests/",
             "Cake\\Test\\": "vendor/cakephp/cakephp/tests/",
-            "Cake\\Test\\": "vendor/zsfoto/jeffadmin/"
+			"JeffAdmin\\": "plugins/JeffAdmin/src/"
         }
-    },
+    }
 
 ```
 
