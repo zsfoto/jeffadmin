@@ -9,3 +9,76 @@ The recommended way to install composer packages is:
 ```
 composer require zsfoto/jeffadmin
 ```
+
+	src/Application.php
+```
+    public function bootstrap(): void
+    {
+        // Call parent to load bootstrap from files.
+        parent::bootstrap();	
+		...
+		
+		// Add this line:
+		$this->addPlugin('JeffAdmin');
+		...
+	}
+```
+
+	composer.json
+```
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/",
+            "App\\": "vendor/zsfoto/jeffadmin/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\Test\\": "tests/",
+            "Cake\\Test\\": "vendor/cakephp/cakephp/tests/",
+            "Cake\\Test\\": "vendor/zsfoto/jeffadmin/"
+        }
+    },
+
+```
+
+	
+	Copy and edit /config/jeffadmin.php file
+```
+	cp vendor/zsfoto/jeffadmin/config/jeffadmin.php /config/jeffadmin.php
+```
+
+
+	Install cakedc/users
+```
+	
+```
+
+	Add the following lines to the end of the /config/bootstrap.php file
+```
+	try {
+		Configure::load('jeffadmin', 'default');
+	} catch (\Exception $e) {
+		exit($e->getMessage() . "\n");
+	}
+
+	Configure::write('Bake.theme', 'JeffAdmin');
+
+```
+
+	In /src/Controller/Admin/AppController.php
+```
+    public function initialize(): void
+    {
+        parent::initialize();
+		...
+		$this->viewBuilder()->setTheme('JeffAdmin');
+		...
+	}
+```
+	or
+	cp ToCopy/src to /src
+
+
+
+
