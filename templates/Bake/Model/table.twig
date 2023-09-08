@@ -76,7 +76,7 @@ class {{ name }}Table extends Table
 {% endif %}
 {% endfor %}
 {% if hasDateTime == 1 %}
-		$this->addBehavior('JeffAdmin.Datepicker');	// inserts only if there is date or time or datetime field
+		//$this->addBehavior('JeffAdmin.Datepicker');	// inserts only if there is date or time or datetime field. It has some errors. Fixing later...
 {% endif %}
 
 {%- if associations.belongsTo or associations.hasMany or associations.belongsToMany %}
