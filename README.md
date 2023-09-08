@@ -77,17 +77,17 @@ composer require zsfoto/jeffadmin
 	}
 ```
 	or
-	cp ToCopy/src to /src
+	cp templates/ToCopy/src to /src
 
 
 
-	Add to route Admin (and Api, if you want)
+	Add to route Admin (and Api prefix, if you want)
 ```
     $routes->prefix('Admin', function (RouteBuilder $builder) {
         $builder->scope('/', function (RouteBuilder $builder) {
             $builder->setExtensions(['json', 'xml', 'xlsx']);
 
-            $builder->connect('/', ['controller' => 'Notes', 'action' => 'index']);
+            //$builder->connect('/', ['controller' => 'Notes', 'action' => 'index']);
 
             $builder->fallbacks(DashedRoute::class);
         });
@@ -98,7 +98,7 @@ composer require zsfoto/jeffadmin
         $builder->scope('/', function (RouteBuilder $builder) {
             $builder->setExtensions(['json', 'xml', 'xlsx']);
 
-            $builder->connect('/', ['controller' => 'Notes', 'action' => 'index']);
+            //$builder->connect('/', ['controller' => 'Notes', 'action' => 'index']);
             
             $builder->fallbacks(DashedRoute::class);
         });
