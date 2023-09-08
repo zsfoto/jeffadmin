@@ -1,6 +1,6 @@
 <?php 
 use Cake\Core\Configure;
-$prefix = strtolower( $this->request->getParam('prefix') );
+$prefix = strtolower( $this->request->getParam('prefix', '') );
 if($prefix == null){	// ha a főoldal lenne, ami prefix nélkül van!
 	$prefix = 'main';
 }
@@ -8,6 +8,8 @@ $controller = $this->request->getParam('controller');
 $action = $this->request->getParam('action');
 
 $sidebar 	 = Configure::read('Theme.'.$prefix.'.sidebar');
+//debug($sidebar); die();
+
 $sidebarMenu = Configure::read('Theme.'.$prefix.'.sidebarMenu');
 $onlySuperAdmin = false;	// A login után kiderül, hogy az illető superadmin-e.
 

@@ -3,7 +3,7 @@
 	$controller = $this->request->getParam('controller');
 	$action = $this->request->getParam('action');
 	
-	$prefix = strtolower( $this->request->getParam('prefix') );
+	$prefix = strtolower( $this->request->getParam('prefix', '') );
 	if($this->request->getParam('prefix') == null){
 		$prefix = 'main';
 	}

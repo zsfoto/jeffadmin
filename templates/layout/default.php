@@ -1,6 +1,6 @@
 <?php use Cake\Core\Configure; ?>
 <?php 
-	$prefix = strtolower( $this->request->getParam('prefix') );
+	$prefix = strtolower( $this->request->getParam('prefix', '') );
 	if(!isset($prefix) || $prefix == ''){
 		$prefix = 'main';
 	}
