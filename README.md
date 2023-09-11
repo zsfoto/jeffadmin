@@ -26,10 +26,10 @@ This plugin adds the AdminLTE framework to CakePHP (for versions above 4.4) with
         'defaultLocale' => env('APP_DEFAULT_LOCALE', 'hu_HU'),
     ],
     
-	'Migrations' => [
-		'unsigned_primary_keys' => true,
-		'column_null_default' => true,
-	],
+    'Migrations' => [
+        'unsigned_primary_keys' => true,
+        'column_null_default' => true,
+    ],
     ...
 ```
 
@@ -67,11 +67,11 @@ This plugin adds the AdminLTE framework to CakePHP (for versions above 4.4) with
 **6.a. Change route in /config/routes.php file.**
 Change this:
 ```
-        $builder->connect('/', ['controller' => 'Pages', 'action' => 'display', 'home']);
+$builder->connect('/', ['controller' => 'Pages', 'action' => 'display', 'home']);
 ```
 to:
 ```
-        $builder->connect('/', ['controller' => 'Blogs', 'action' => 'index']);
+$builder->connect('/', ['controller' => 'Blogs', 'action' => 'index']);
 ```
 
 **6.b. Add prefixes to /config/routes.php file:**
@@ -106,7 +106,7 @@ Configure::write('Bake.theme', 'JeffAdmin');
 
 **8. Remove chars "//" from lines start in /src/Application.php file:**
 ```
-		if (Configure::read('debug')) {
+        if (Configure::read('debug')) {
             Configure::write('DebugKit.forceEnable', true);
             $this->addPlugin('DebugKit');
         }
@@ -118,7 +118,7 @@ Configure::write('Bake.theme', 'JeffAdmin');
 ```
 After when removed "//":
 ```
-		if (Configure::read('debug')) {
+        if (Configure::read('debug')) {
             Configure::write('DebugKit.forceEnable', true);
             $this->addPlugin('DebugKit');
         }
