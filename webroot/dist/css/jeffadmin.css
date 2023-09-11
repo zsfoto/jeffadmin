@@ -1353,3 +1353,15 @@ body.login{
 }
 /*	############## /.VIEW ################## */
 
+/* In text area ... */
+.note-editable > p, .text > p {
+	margin: 0;
+}
+
+.note-editable > pre, .text > pre {
+	color: #333;
+	fomnt-family: "Courier New";
+	font-weight: bold;
+	padding: 0;
+	margin-bottom: 0;
+}

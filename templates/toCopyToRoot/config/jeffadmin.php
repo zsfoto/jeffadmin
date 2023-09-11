@@ -2,9 +2,9 @@
 	return [
 		'Theme' => [
 			'main' => [ // ------------------- Prefix ----------------------
-				'name' => 'Notes',
+				'name' => 'Change this title',
 				'prefix' => 'main',
-				'title' => __('Notes'),
+				'title' => __('Change this title'),
 
 				'content_page_header' 	=> false,	// echo $this->element('contentPageHeader');	BE KELL MÁSOLNI ÉS SZERKESZTENI!
 
@@ -52,7 +52,7 @@
 			
 				// ---------------------------- Sidebar ---------------------
 				'sidebar' => [
-					'brandTexts' => "Notes Admin",
+					'brandTexts' => "Site Admin",
 					'userName' => "Jeff Shoemaker",
 					'showSearch' => false,
 				],
@@ -113,9 +113,9 @@
 */
 
 			'admin' => [ // ------------------- Prefix ----------------------
-				'name' => 'Admin',		
+				'name' => 'Site Admin',
 				'prefix' => 'admin',
-				'title' => __('Admin'),
+				'title' => __('Site Admin'),
 
 				'content_page_header' 	=> false,	// nem kell
 
@@ -163,7 +163,7 @@
 			
 				// ---------------------------- Sidebar ---------------------
 				'sidebar' => [
-					'brandTexts' => "Notes Admin",
+					'brandTexts' => "Site Admin",
 					'userName' => "Jeff Shoemaker",
 					'showSearch' => false,
 				],
@@ -195,11 +195,13 @@
 					[
 						// ------------------ Menu Item ---------------------
 						'type' 	=> 'menuitem',
-						'title' => __('Notes'),
-						'controller' => 'Notes',			// Controller/Action vagy link!!!! A link az első amit figyelembe vesz!
+						'title' => __('Blogs'),
+						'controller' => 'Blogs',			// Controller/Action vagy link!!!! A link az első amit figyelembe vesz!
 						'action' => 'index',
 						'icon'	=> 'nav-icon fas fa-th',
 					],
+
+/*
 					[
 						// ------------------ Menu Item ---------------------
 						'type' 	=> 'menuitem',
@@ -208,7 +210,7 @@
 						'action' => 'index',
 						'icon'	=> 'nav-icon fas fa-th',
 					],
-					
+*/					
 
 
 					//############################################################################################################
@@ -233,17 +235,6 @@
 						'icon'	=> 'nav-icon fas fa-th',
 						'onlySuperUser' => true,	// Show only for is_superuser
 					],
-
-/*
-					[
-						// ------------------ Menu Item ---------------------
-						'type' 	=> 'menuitem',
-						'title' => __('Trackings'),
-						'controller' => 'Trackings',			// Controller/Action vagy link!!!! A link az első amit figyelembe vesz!
-						'action' => 'index',
-						'icon'	=> 'nav-icon fas fa-th',
-					],
-*/
 
 /*
 					[

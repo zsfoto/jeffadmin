@@ -140,5 +140,21 @@ return [
             'action' => '*',
             'bypassAuth' => true,
         ],
+		
+		
+        [
+            'role' => '*',
+            'controller' => 'Blogs',
+            'action' => ['index', 'view'],
+            'bypassAuth' => true,
+        ],
+        [
+            'role' => 'user',
+            'controller' => 'Blogs',
+            'action' => ['add', 'edit', 'delete'],
+            //'bypassAuth' => true,
+        ],
+			
+		
     ]
 ];
