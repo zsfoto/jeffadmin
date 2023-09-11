@@ -1,3 +1,5 @@
+This plugin adds the AdminLTE framework to CakePHP (for versions above 4.4) with a special look that I like. However, use CakeDC/Users for user management. Its installation and commissioning can be read below:
+
 **1. Install cakephp:**
 
 ```
@@ -121,7 +123,7 @@ Removed:
         Configure::write('Users.config', ['users']);
 ```
 
-**9. Copy config and src dir to app root (from /vendor/zsfoto/jeffadmin/templates/toCopyToRoot/ to /):**
+**9. Copy config and src dir to app root (from /vendor/zsfoto/jeffadmin/templates/toCopyToRoot/ to /) Overwrite! :**
 ```
 # cp /vendor/zsfoto/jeffadmin/templates/toCopyToRoot/config /(app root)
 # cp /vendor/zsfoto/jeffadmin/templates/toCopyToRoot/src /(app root)
