@@ -1,10 +1,10 @@
-** 1. Install cakephp: **
+**1. Install cakephp: **
 
 ```
 # composer create-project --prefer-dist cakephp/app:~4.0 teszt.loc
 ```
 
-** - Setup database in: /config/app_local.php:**
+**- Setup database in: /config/app_local.php:**
 ```
 	...
     'Datasources' => [
@@ -26,14 +26,14 @@
 ```
 
 
-** 2. Install CakeDc / Users: **
+**2. Install CakeDc / Users: **
 
 ```
 # composer require cakedc/users
 ```
 
 
-** 3. Add to (and edit) in /src/Application.php file:**
+**3. Add to (and edit) in /src/Application.php file:**
 ```
         if (Configure::read('debug')) {
             Configure::write('DebugKit.forceEnable', true);
