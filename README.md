@@ -1,108 +1,146 @@
-# JeffAdmin plugin for CakePHP
-
-## Installation
-
-You can install this plugin into your CakePHP application using [composer](https://getcomposer.org).
-
-The recommended way to install composer packages is:
+** 1. Install cakephp: **
 
 ```
-composer require zsfoto/jeffadmin
+# composer create-project --prefer-dist cakephp/app:~4.0 teszt.loc
 ```
 
-	src/Application.php
+** - Setup database in: /config/app_local.php:**
 ```
-    public function bootstrap(): void
-    {
-        // Call parent to load bootstrap from files.
-        parent::bootstrap();	
-		...
-		
-		// Add this line:
-		$this->addPlugin('JeffAdmin');
-		...
-	}
+	...
+    'Datasources' => [
+        'default' => [
+            'host' => 'localhost',
+            'username' => 'username',
+            'password' => 'secret',
+            'database' => 'test',
+    ...
 ```
 
-	Check the composer.json
+**- Add locale to /config/app_local.php if you want: **
 ```
-    "autoload": {
-        "psr-4": {
-            "JeffAdmin\\": "src/",
-			"JeffAdmin\\": "plugins/JeffAdmin/src/"
+    ...
+    'App' => [
+        'defaultLocale' => env('APP_DEFAULT_LOCALE', 'hu_HU'),
+    ],
+    ...
+```
+
+
+** 2. Install CakeDc / Users: **
+
+```
+# composer require cakedc/users
+```
+
+
+** 3. Add to (and edit) in /src/Application.php file:**
+```
+        if (Configure::read('debug')) {
+            Configure::write('DebugKit.forceEnable', true);
+            $this->addPlugin('DebugKit');
         }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "JeffAdmin\\Test\\": "tests/",
-            "Cake\\Test\\": "vendor/cakephp/cakephp/tests/",
-			"JeffAdmin\\": "plugins/JeffAdmin/src/"
-        }
-    }
 
+        // Load more plugins here
+        // $this->addPlugin('JeffAdmin');
+        $this->addPlugin(\CakeDC\Users\Plugin::class);
+        // Configure::write('Users.config', ['users']);
 ```
 
-	
-	Copy and edit /config/jeffadmin.php file
+**4. Install CakeDC / Users:**
 ```
-	cp vendor/zsfoto/jeffadmin/config/jeffadmin.php /config/jeffadmin.php
-```
-
-
-	Install cakedc/users
-```
-	
+# cake migrations migrate -p CakeDC/Users
 ```
 
-	Add the following lines to the end of the /config/bootstrap.php file
+**5. Install JeffAdmin:**
 ```
-	try {
-		Configure::load('jeffadmin', 'default');
-	} catch (\Exception $e) {
-		exit($e->getMessage() . "\n");
-	}
-
-	Configure::write('Bake.theme', 'JeffAdmin');
-
+# composer require zsfoto/jeffadmin
 ```
 
-	In /src/Controller/Admin/AppController.php
+**6.a. Change route in /config/routes.php file.**
+Change this:
 ```
-    public function initialize(): void
-    {
-        parent::initialize();
-		...
-		$this->viewBuilder()->setTheme('JeffAdmin');
-		...
-	}
+        $builder->connect('/', ['controller' => 'Pages', 'action' => 'display', 'home']);
 ```
-	or
-	cp templates/ToCopy/src to /src
+to:
+```
+        $builder->connect('/', ['controller' => 'Blogs', 'action' => 'index']);
+```
 
-
-
-	Add to route Admin (and Api prefix, if you want)
+**6.b. Add prefixes to /config/routes.php file:**
 ```
     $routes->prefix('Admin', function (RouteBuilder $builder) {
         $builder->scope('/', function (RouteBuilder $builder) {
-            $builder->setExtensions(['json', 'xml', 'xlsx']);
-
-            //$builder->connect('/', ['controller' => 'Notes', 'action' => 'index']);
-
+            //$builder->setExtensions(['json', 'xml', 'xlsx']);
+            $builder->connect('/', ['controller' => 'Blogs', 'action' => 'index']);
             $builder->fallbacks(DashedRoute::class);
         });
-	});
-
+    });
 
     $routes->prefix('Api', function (RouteBuilder $builder) {
         $builder->scope('/', function (RouteBuilder $builder) {
             $builder->setExtensions(['json', 'xml', 'xlsx']);
-
-            //$builder->connect('/', ['controller' => 'Notes', 'action' => 'index']);
-            
+            $builder->connect('/', ['controller' => 'Blogs', 'action' => 'index']);            
             $builder->fallbacks(DashedRoute::class);
         });
-	});
+    });
 ```
 
+
+**7. Add lines to end of the /config/bootstrap.php file:**
+```
+try {
+    Configure::load('jeffadmin', 'default');
+} catch (\Exception $e) {
+    exit($e->getMessage() . "\n");
+}
+Configure::write('Bake.theme', 'JeffAdmin');
+```
+
+**8. Remove chars "//" from lines start in /src/Application.php file:**
+```
+		if (Configure::read('debug')) {
+            Configure::write('DebugKit.forceEnable', true);
+            $this->addPlugin('DebugKit');
+        }
+
+        // Load more plugins here
+        //$this->addPlugin('JeffAdmin');
+        $this->addPlugin(\CakeDC\Users\Plugin::class);
+        //Configure::write('Users.config', ['users']);
+```
+Removed:
+```
+		if (Configure::read('debug')) {
+            Configure::write('DebugKit.forceEnable', true);
+            $this->addPlugin('DebugKit');
+        }
+
+        // Load more plugins here
+        $this->addPlugin('JeffAdmin');
+        $this->addPlugin(\CakeDC\Users\Plugin::class);
+        Configure::write('Users.config', ['users']);
+```
+
+**9. Copy config and src dir to app root (from /vendor/zsfoto/jeffadmin/templates/toCopyToRoot/ to /):**
+```
+# cp /vendor/zsfoto/jeffadmin/templates/toCopyToRoot/config /(app root)
+# cp /vendor/zsfoto/jeffadmin/templates/toCopyToRoot/src /(app root)
+```
+
+**10. Modify MySQL users table in SQL editor (phpmyadmin or MySQL Workbench):**
+```
+ALTER TABLE `users` CHANGE `username` `username` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NULL; 
+```
+
+**11. Try to bake and "Enjoy it":**
+```
+# cake bake model blogs
+# cake bake controller blogs --prefix admin
+# cake bake template blogs --prefix admin
+```
+
+**12. If you wanna modify the CakeDC/Users emails, move and edit: (I still have to think about it ;-))**
+```
+# mv /vendor/zsfoto/jeffadmin/templates/plugin/CakeDC/Users/email root)/templates/plugin/CakeDC/Users/email
+```
 
