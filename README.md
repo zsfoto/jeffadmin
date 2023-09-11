@@ -25,6 +25,11 @@ This plugin adds the AdminLTE framework to CakePHP (for versions above 4.4) with
     'App' => [
         'defaultLocale' => env('APP_DEFAULT_LOCALE', 'hu_HU'),
     ],
+    
+	'Migrations' => [
+		'unsigned_primary_keys' => true,
+		'column_null_default' => true,
+	],
     ...
 ```
 
@@ -49,7 +54,7 @@ This plugin adds the AdminLTE framework to CakePHP (for versions above 4.4) with
         // Configure::write('Users.config', ['users']);
 ```
 
-**4. Install CakeDC / Users:**
+**4. Create CakeDC/Users tables:**
 ```
 # cake migrations migrate -p CakeDC/Users
 ```
@@ -111,7 +116,7 @@ Configure::write('Bake.theme', 'JeffAdmin');
         $this->addPlugin(\CakeDC\Users\Plugin::class);
         //Configure::write('Users.config', ['users']);
 ```
-Removed:
+After when removed "//":
 ```
 		if (Configure::read('debug')) {
             Configure::write('DebugKit.forceEnable', true);
@@ -136,14 +141,32 @@ ALTER TABLE `users` CHANGE `username` `username` VARCHAR(255) CHARACTER SET utf8
 ```
 
 **11. Try to bake and "Enjoy it":**
+Create **blogs table** and create model, admin controller and template
 ```
+# cake migrations migrate -p JeffAdmin	// Create
+
 # cake bake model blogs
 # cake bake controller blogs --prefix admin
 # cake bake template blogs --prefix admin
+
+# cake server
 ```
+
+If you see the [login](http://localhost:8765/login) page, please [register](http://localhost:8765/register) a new user. Dont forget to activate in email link or directly in users table ;-) in active field (values: 0 or 1).
+
+[http://localhost:8765/admin](http://localhost:8765/admin)
+
+See more in [CakeDC](https://github.com/CakeDC/users/blob/11.next-cake4/Docs/Documentation/Installation.md) page on github.
+
+
 
 **12. If you wanna modify the CakeDC/Users emails, move and edit: (I still have to think about it ;-))**
 ```
 # mv /vendor/zsfoto/jeffadmin/templates/plugin/CakeDC/Users/email root)/templates/plugin/CakeDC/Users/email
 ```
+
+**13. Config Sidebar menu:**
+Edit the /config/jeffadmin.php
+
+... To be continued ...
 
