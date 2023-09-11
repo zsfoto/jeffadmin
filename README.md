@@ -4,6 +4,7 @@ This plugin adds the AdminLTE framework to CakePHP (for versions above 4.4) with
 
 ```
 # composer create-project --prefer-dist cakephp/app:~4.0 teszt.loc
+# cd teszt.loc
 ```
 
 **- Setup database in: /config/app_local.php:**
