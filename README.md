@@ -1,4 +1,4 @@
-**1. Install cakephp: **
+**1. Install cakephp:**
 
 ```
 # composer create-project --prefer-dist cakephp/app:~4.0 teszt.loc
@@ -16,7 +16,7 @@
     ...
 ```
 
-**- Add locale to /config/app_local.php if you want: **
+**- Add locale to /config/app_local.php if you want:**
 ```
     ...
     'App' => [
@@ -26,7 +26,7 @@
 ```
 
 
-**2. Install CakeDc / Users: **
+**2. Install CakeDc / Users:**
 
 ```
 # composer require cakedc/users
