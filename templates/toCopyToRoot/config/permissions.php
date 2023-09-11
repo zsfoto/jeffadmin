@@ -143,10 +143,10 @@ return [
 		
 		
         [
-            'role' => '*',
+            'role' => 'user',
             'controller' => 'Blogs',
             'action' => ['index', 'view'],
-            'bypassAuth' => true,
+            //'bypassAuth' => true,
         ],
         [
             'role' => 'user',

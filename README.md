@@ -146,6 +146,12 @@ Create **blogs table** and create model, admin controller and template
 # cake migrations migrate -p JeffAdmin	// Create
 
 # cake bake model blogs
+# cake bake controller blogs
+# cake bake template blogs
+```
+
+Create the admin:
+```
 # cake bake controller blogs --prefix admin
 # cake bake template blogs --prefix admin
 
