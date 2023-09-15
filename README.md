@@ -174,5 +174,9 @@ See more in [CakeDC](https://github.com/CakeDC/users/blob/11.next-cake4/Docs/Doc
 **13. Config Sidebar menu:**
 Edit the /config/jeffadmin.php
 
+**Status**
+
+**This plugin is still in early development status, things may change suddenly, but it can be used in real projects already.**
+
 ... To be continued ...
 
