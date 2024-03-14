@@ -13,14 +13,12 @@
     "autoload": {
         "psr-4": {
             "JeffAdmin\\": "src/",
-			"JeffAdmin\\": "plugins/JeffAdmin/src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
             "JeffAdmin\\Test\\": "tests/",
             "Cake\\Test\\": "vendor/cakephp/cakephp/tests/",
-			"JeffAdmin\\": "plugins/JeffAdmin/src/"
         }
     }
 }
