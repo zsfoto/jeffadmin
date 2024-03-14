@@ -31,7 +31,7 @@ class DatepickerBehavior extends Behavior
 		
 		foreach($data as $field => $value){	// Nincs benne a created és a modified mező. Hmm!
 			$type = $tableSchema->getColumnType($field);
-			if(in_array($type, ['date', 'time', 'datetime']){
+			if (in_array($type, ['date', 'time', 'datetime'])) {
 				if ($locale == 'hu_HU') {
 					switch( $type ){
 						case 'date': 
